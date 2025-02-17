@@ -1,15 +1,21 @@
+import { Dispatch, SetStateAction } from 'react';
+import MenuButton from './MenuButton';
+
 interface Chat {
   id: number;
   title: string;
 }
 
-interface SidebarProps {
+interface SideBarProps {
   chats: Chat[];
+  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const SideBar = ({ chats }: SidebarProps) => {
+const SideBar = ({ chats, setIsSidebarOpen }: SideBarProps) => {
   return (
-    <div className="sidebar">
+    <>
+      <MenuButton onClick={() => setIsSidebarOpen(false)} />
+
       <button className="new-chat-btn">New Chat</button>
 
       <div className="recent-chats">
@@ -22,7 +28,7 @@ const SideBar = ({ chats }: SidebarProps) => {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 

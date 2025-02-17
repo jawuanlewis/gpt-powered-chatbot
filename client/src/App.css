@@ -21,17 +21,30 @@
 /* Global Styles */
 .app {
   display: grid;
-  grid-template-columns: 24vw 1fr;
+  grid-template-columns: auto 1fr;
   min-height: 100vh;
   font-family: 'Noto Sans', serif;
   background-color: var(--main-background);
   color: var(--light-text);
 }
 
+/* Menu Button Styles */
+.menu-btn {
+  cursor: pointer;
+}
+
 /* Sidebar Styles */
 .sidebar {
+  width: 24vw;
   padding: 2rem;
+  padding-top: 1rem;
   background-color: var(--side-background);
+  transition: transform 0.3s ease;
+  &.hidden {
+    transform: translateX(-100%);
+    width: 0;
+    padding: 0;
+  }
 }
 
 .new-chat-btn {
@@ -45,6 +58,7 @@
   border: 2px solid var(--purple-accent);
   border-radius: 10px;
   cursor: pointer;
+  margin-top: 2rem;
   margin-bottom: 3rem;
   transition: background-color 0.2s;
   &:hover {
@@ -83,9 +97,13 @@
   justify-content: center;
   background-color: var(--main-background);
   min-height: 100vh;
+  transition: margin-left 0.3s ease;
 }
 
-.main-title {
+.chat-area-head {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
   position: absolute;
   top: 1rem;
   left: 2rem;
