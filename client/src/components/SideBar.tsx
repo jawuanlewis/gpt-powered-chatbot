@@ -1,19 +1,17 @@
 interface Chat {
-  id: number
-  title: string
+  id: number;
+  title: string;
 }
 
 interface SidebarProps {
-  chats: Chat[]
+  chats: Chat[];
 }
 
 const SideBar = ({ chats }: SidebarProps) => {
   return (
     <div className="sidebar">
-      <button className="new-chat-btn">
-        New Chat
-      </button>
-      
+      <button className="new-chat-btn">New Chat</button>
+
       <div className="recent-chats">
         <label className="recent-chats-title">Recent Chats</label>
         <ul className="chat-list">
@@ -25,7 +23,7 @@ const SideBar = ({ chats }: SidebarProps) => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SideBar
+export default SideBar;
