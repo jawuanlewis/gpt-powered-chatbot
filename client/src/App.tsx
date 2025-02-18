@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SideBar from './components/SideBar';
 import ChatArea from './components/ChatArea';
-import './App.css';
+import './styles/App.css';
 
 const App = () => {
   const [chats] = useState([

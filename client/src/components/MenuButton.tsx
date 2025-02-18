@@ -1,4 +1,4 @@
-import hamburgerMenu from '../assets/icons/icons8-hamburger-menu.svg';
+import hamburgerMenu from '@/assets/icons/icons8-hamburger-menu.svg';
 
 interface MenuButtonProps {
   onClick: () => void;
