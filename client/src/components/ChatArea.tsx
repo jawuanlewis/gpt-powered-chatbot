@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import MenuButton from './MenuButton';
+import Conversation from './Conversation';
 import '@/styles/ChatArea.css';
 
 interface ChatAreaProps {
@@ -8,6 +9,28 @@ interface ChatAreaProps {
 }
 
 const ChatArea = ({ isSidebarOpen, setIsSidebarOpen }: ChatAreaProps) => {
+  const [timeOfDay, setTimeOfDay] = useState<string>('');
+  const test = false;
+
+  useEffect(() => {
+    const updateGreeting = () => {
+      const currentHour = new Date().getHours();
+
+      if (currentHour >= 5 && currentHour < 12) {
+        setTimeOfDay('morning');
+      } else if (currentHour >= 12 && currentHour < 17) {
+        setTimeOfDay('afternoon');
+      } else {
+        setTimeOfDay('evening');
+      }
+    };
+    updateGreeting();
+
+    // Update greeting every minute
+    const interval = setInterval(updateGreeting, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <div className="chat-area-head">
@@ -17,7 +40,11 @@ const ChatArea = ({ isSidebarOpen, setIsSidebarOpen }: ChatAreaProps) => {
         <label className="main-title">Jawuan's GPT</label>
       </div>
 
-      <label className="greeting">Good afternoon, User</label>
+      {test ? (
+        <label className="greeting">Good {timeOfDay}, User</label>
+      ) : (
+        <Conversation />
+      )}
       <div className="input-container">
         <input
           type="text"

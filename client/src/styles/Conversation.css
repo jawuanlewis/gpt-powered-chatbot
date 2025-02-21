@@ -1,0 +1,25 @@
+.conversation-box {
+  width: 60vw;
+  padding: 2rem;
+  margin: 5rem 0;
+  background-color: var(--side-background);
+  border-radius: 0.5rem;
+  & ul {
+    list-style: none;
+    & li {
+      padding: 0.75rem;
+      margin: 2rem 0;
+      border-radius: 0.5rem;
+      width: fit-content;
+    }
+  }
+}
+
+.user-message {
+  background-color: var(--purple-accent);
+  margin-left: auto !important;
+}
+
+.assistant-message {
+  background-color: var(--inner-background);
+}

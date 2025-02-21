@@ -14,8 +14,8 @@
 }
 
 .input-container {
-  width: 100%;
-  max-width: 600px;
+  width: 50vw;
+  max-width: 800px;
 }
 
 .chat-input {

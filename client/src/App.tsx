@@ -8,7 +8,7 @@ const App = () => {
     { id: 1, title: 'Chat 1' },
     { id: 2, title: 'Chat 2' },
   ]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   return (
     <div className="app">
