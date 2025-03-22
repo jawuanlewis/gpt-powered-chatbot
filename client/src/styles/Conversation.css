@@ -1,9 +1,11 @@
 .conversation-box {
   width: 60vw;
+  height: 60vh;
   padding: 2rem;
   margin: 5rem 0;
   background-color: var(--side-background);
   border-radius: 0.5rem;
+  overflow-y: auto;
   & ul {
     list-style: none;
     & li {

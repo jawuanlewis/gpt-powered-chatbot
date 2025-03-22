@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import '@/styles/Conversation.css';
 
 interface Message {
@@ -7,18 +6,15 @@ interface Message {
   content: string;
 }
 
-const Conversation = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, role: 'user', content: 'Hello' },
-    { id: 2, role: 'assistant', content: 'Hello! How can I help you?' },
-    { id: 3, role: 'user', content: 'What is the capital of Arizona?' },
-    { id: 4, role: 'assistant', content: 'The capital of Arizona is Phoenix.' },
-  ]);
+interface ConversationProps {
+  chat: Message[];
+}
 
+const Conversation = ({ chat }: ConversationProps) => {
   return (
     <div className="conversation-box">
       <ul>
-        {messages.map((message) => (
+        {chat.map((message) => (
           <li key={message.id} className={`${message.role}-message`}>
             {message.content}
           </li>

@@ -3,12 +3,23 @@ import MenuButton from './MenuButton';
 import Conversation from './Conversation';
 import '@/styles/ChatArea.css';
 
+interface Message {
+  id: number;
+  role: string;
+  content: string;
+}
+
 interface ChatAreaProps {
+  currentChat: Message[];
   isSidebarOpen: boolean;
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const ChatArea = ({ isSidebarOpen, setIsSidebarOpen }: ChatAreaProps) => {
+const ChatArea = ({
+  currentChat,
+  isSidebarOpen,
+  setIsSidebarOpen,
+}: ChatAreaProps) => {
   const [timeOfDay, setTimeOfDay] = useState<string>('');
   const test = false;
 
@@ -43,7 +54,7 @@ const ChatArea = ({ isSidebarOpen, setIsSidebarOpen }: ChatAreaProps) => {
       {test ? (
         <label className="greeting">Good {timeOfDay}, User</label>
       ) : (
-        <Conversation />
+        <Conversation chat={currentChat} />
       )}
       <div className="input-container">
         <input
