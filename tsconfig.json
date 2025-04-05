@@ -9,10 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
     "rootDir": "./server",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["server/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["server/**/*.ts"],
   "exclude": ["node_modules", "dist", "client"]
