@@ -20,10 +20,6 @@ api.interceptors.response.use(
             ? (error.response.data as { message?: string }).message
             : 'Unknown error',
       });
-    } else if (error.request) {
-      console.error('No response received:', error.request);
-    } else {
-      console.error('Error setting up request:', error.message);
     }
     return Promise.reject(error);
   }
