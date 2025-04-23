@@ -1,11 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
+import { Chat } from '@/types/chat';
 import MenuButton from './MenuButton';
 import '@/styles/SideBar.css';
-
-interface Chat {
-  id: number;
-  title: string;
-}
 
 interface SideBarProps {
   chats: Chat[];

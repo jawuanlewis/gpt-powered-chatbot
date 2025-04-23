@@ -1,4 +1,4 @@
-import { ChatHistoryResponse } from '../types/chat'
+import { ChatHistoryResponse } from '@/types/chat';
 import api from './apiClient';
 
 export const chatService = {

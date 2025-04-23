@@ -51,7 +51,7 @@ const chatController = {
       ];
       res.json({ chatHistory: chats });
     } catch (error) {
-      console.error('Error getting chat history:', error);
+      console.error('(Server) Error getting chat history:', error);
       res.status(500).json({ error: 'Failed to get chat history' });
     }
   },

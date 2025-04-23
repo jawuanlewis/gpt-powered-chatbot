@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { chatService } from './services/chatService';
-import { Chat } from './types/chat';
-import SideBar from './components/SideBar';
-import ChatArea from './components/ChatArea';
-import './styles/App.css';
+import { chatService } from '@/services/chatService';
+import { Chat } from '@/types/chat';
+import SideBar from '@/components/SideBar';
+import ChatArea from '@/components/ChatArea';
+import '@/styles/App.css';
 
 const App = () => {
   const [chats, setChats] = useState<Chat[]>([]);
@@ -18,9 +18,9 @@ const App = () => {
       const chatHistory = await chatService.getChatHistory();
       setChats(chatHistory);
     } catch (error) {
-      console.error("Error calling getChatHistory() API:", error);
+      console.error('(Client) Error calling getChatHistory() API:', error);
     }
-  }
+  };
 
   return (
     <div className="app">
@@ -30,7 +30,7 @@ const App = () => {
       <div className="chat-area">
         {chats.length > 0 ? (
           <ChatArea
-            currentChat={chats[1].messages}
+            currentChat={chats[0].messages}
             isSidebarOpen={isSidebarOpen}
             setIsSidebarOpen={setIsSidebarOpen}
           />

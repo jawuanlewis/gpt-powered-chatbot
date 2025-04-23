@@ -43,12 +43,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Basic error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({
     status: 'error',
-    message: 'Something went wrong!',
+    message: '(Server) Something went wrong!',
   });
 });
 

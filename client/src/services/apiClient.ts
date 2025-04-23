@@ -12,7 +12,7 @@ api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response) {
-      console.error('API Response Error:', {
+      console.error('(Client) API Response Error:', {
         status: error.response.status,
         message:
           typeof error.response.data === 'object' &&

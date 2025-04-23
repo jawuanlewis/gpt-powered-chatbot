@@ -1,13 +1,8 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { Message } from '@/types/chat';
 import MenuButton from './MenuButton';
 import Conversation from './Conversation';
 import '@/styles/ChatArea.css';
-
-interface Message {
-  id: number;
-  role: string;
-  content: string;
-}
 
 interface ChatAreaProps {
   currentChat: Message[];

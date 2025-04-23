@@ -1,10 +1,5 @@
+import { Message } from '@/types/chat';
 import '@/styles/Conversation.css';
-
-interface Message {
-  id: number;
-  role: string;
-  content: string;
-}
 
 interface ConversationProps {
   chat: Message[];
