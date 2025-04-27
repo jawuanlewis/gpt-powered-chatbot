@@ -56,7 +56,7 @@ const chatController = {
     }
   },
 
-  sendPrompt: async (req: Request, res: Response) => {
+  handlePrompt: async (req: Request, res: Response) => {
     const { prompt } = req.body;
   },
 };

@@ -7,16 +7,26 @@ import '@/styles/App.css';
 
 const App = () => {
   const [chats, setChats] = useState<Chat[]>([]);
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   useEffect(() => {
-    void getChats();
+    const initializeChats = async () => {
+      const chatHistory = await getChats();
+      setChats(chatHistory);
+    };
+    void initializeChats();
   }, []);
+
+  useEffect(() => {
+    if (chats.length > 0 && !activeChat) {
+      setActiveChat(chats[0]);
+    }
+  }, [chats, activeChat]);
 
   const getChats = async () => {
     try {
-      const chatHistory = await chatService.getChatHistory();
-      setChats(chatHistory);
+      return await chatService.getChatHistory();
     } catch (error) {
       console.error('(Client) Error calling getChatHistory() API:', error);
     }
@@ -28,13 +38,11 @@ const App = () => {
         <SideBar chats={chats} setIsSidebarOpen={setIsSidebarOpen} />
       </div>
       <div className="chat-area">
-        {chats.length > 0 ? (
-          <ChatArea
-            currentChat={chats[0].messages}
-            isSidebarOpen={isSidebarOpen}
-            setIsSidebarOpen={setIsSidebarOpen}
-          />
-        ) : null}
+        <ChatArea
+          currentChat={activeChat?.messages ?? null}
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
       </div>
     </div>
   );

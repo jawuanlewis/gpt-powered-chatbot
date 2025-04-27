@@ -5,7 +5,7 @@ import Conversation from './Conversation';
 import '@/styles/ChatArea.css';
 
 interface ChatAreaProps {
-  currentChat: Message[];
+  currentChat: Message[] | null;
   isSidebarOpen: boolean;
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -16,7 +16,6 @@ const ChatArea = ({
   setIsSidebarOpen,
 }: ChatAreaProps) => {
   const [timeOfDay, setTimeOfDay] = useState<string>('');
-  const test = false;
 
   useEffect(() => {
     const updateGreeting = () => {
@@ -46,10 +45,10 @@ const ChatArea = ({
         <label className="main-title">Jawuan&apos;s GPT</label>
       </div>
 
-      {test ? (
-        <label className="greeting">Good {timeOfDay}, User</label>
-      ) : (
+      {currentChat ? (
         <Conversation chat={currentChat} />
+      ) : (
+        <label className="greeting">Good {timeOfDay}, User</label>
       )}
       <div className="input-container">
         <input
