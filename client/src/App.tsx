@@ -39,7 +39,8 @@ const App = () => {
       </div>
       <div className="chat-area">
         <ChatArea
-          currentChat={activeChat?.messages ?? null}
+          currentChat={activeChat ?? null}
+          setCurrentChat={setActiveChat}
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
         />

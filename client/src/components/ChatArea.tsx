@@ -1,17 +1,19 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { Message } from '@/types/chat';
+import { Chat } from '@/types/chat';
 import MenuButton from './MenuButton';
 import Conversation from './Conversation';
 import '@/styles/ChatArea.css';
 
 interface ChatAreaProps {
-  currentChat: Message[] | null;
+  currentChat: Chat | null;
+  setCurrentChat: Dispatch<SetStateAction<Chat | null>>;
   isSidebarOpen: boolean;
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const ChatArea = ({
   currentChat,
+  setCurrentChat,
   isSidebarOpen,
   setIsSidebarOpen,
 }: ChatAreaProps) => {
@@ -46,7 +48,7 @@ const ChatArea = ({
       </div>
 
       {currentChat ? (
-        <Conversation chat={currentChat} />
+        <Conversation chat={currentChat.messages} />
       ) : (
         <label className="greeting">Good {timeOfDay}, User</label>
       )}

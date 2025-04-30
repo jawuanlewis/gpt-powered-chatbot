@@ -1,7 +1,9 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
+import session from 'express-session';
 import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import MongoDBStore from 'connect-mongodb-session';
 import chatRoutes from './routes/chatRoutes.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -14,6 +16,18 @@ app.set('trust proxy', 1);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// Configure MongoDB session store
+const MongoStore = MongoDBStore(session);
+const store = new MongoStore({
+  uri: process.env.MONGO_URI as string,
+  databaseName: process.env.DB_NAME as string,
+  collection: 'sessions',
+});
+
+store.on('error', (error: Error) => {
+  console.error('(Server) Session store error:', error);
+});
 
 // CORS config based on environment
 const allowedOrigins = [
@@ -42,6 +56,20 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET as string,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none',
+      maxAge: undefined,
+    },
+    proxy: true,
+  })
+);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
