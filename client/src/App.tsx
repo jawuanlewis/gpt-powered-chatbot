@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { chatService } from '@/services/chatService';
-import { Chat } from '@/types/chat';
+import { Chat, CurrChat } from '@/types/chat';
 import SideBar from '@/components/SideBar';
 import ChatArea from '@/components/ChatArea';
 import '@/styles/App.css';
 
 const App = () => {
   const [chats, setChats] = useState<Chat[]>([]);
-  const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const [activeChat, setActiveChat] = useState<CurrChat>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const App = () => {
       </div>
       <div className="chat-area">
         <ChatArea
-          currentChat={activeChat ?? null}
+          currentChat={activeChat}
           setCurrentChat={setActiveChat}
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}

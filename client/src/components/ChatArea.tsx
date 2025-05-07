@@ -1,12 +1,13 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { Chat } from '@/types/chat';
+import { chatService } from '@/services/chatService';
+import { CurrChat } from '@/types/chat';
 import MenuButton from './MenuButton';
 import Conversation from './Conversation';
 import '@/styles/ChatArea.css';
 
 interface ChatAreaProps {
-  currentChat: Chat | null;
-  setCurrentChat: Dispatch<SetStateAction<Chat | null>>;
+  currentChat: CurrChat;
+  setCurrentChat: Dispatch<SetStateAction<CurrChat>>;
   isSidebarOpen: boolean;
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -18,6 +19,7 @@ const ChatArea = ({
   setIsSidebarOpen,
 }: ChatAreaProps) => {
   const [timeOfDay, setTimeOfDay] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>('');
 
   useEffect(() => {
     const updateGreeting = () => {
@@ -38,6 +40,16 @@ const ChatArea = ({
     return () => clearInterval(interval);
   }, []);
 
+  const getUpdatedChat = async () => {
+    try {
+      const updatedChat = await chatService.handlePrompt(currentChat, inputValue);
+      setCurrentChat(updatedChat);
+      setInputValue('');
+    } catch (error) {
+      console.error('(Client) Error calling handlePrompt() API:', error);
+    }
+  };
+
   return (
     <>
       <div className="chat-area-head">
@@ -57,7 +69,17 @@ const ChatArea = ({
           type="text"
           placeholder="What can I help you with?"
           className="chat-input"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && getUpdatedChat()}
         />
+        <button
+          className="send-button"
+          onClick={() => getUpdatedChat()}
+          aria-label="Send message"
+        >
+          ➤
+        </button>
       </div>
     </>
   );

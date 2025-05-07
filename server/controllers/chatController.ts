@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import openai from '../config/open-ai.js';
 import { Message } from '../types/chat.js';
+import openai from '../config/open-ai.js';
 
 const chatController = {
   getChatHistory: async (req: Request, res: Response) => {
@@ -65,7 +65,8 @@ const chatController = {
       let chatIndex;
 
       // Add user's prompt to chat history accordingly
-      if (chat ?? null) {
+      if (chat === null) {
+        // Null signifies a new chat
         chatIndex = chats.length;
         chats.push({
           id: chatIndex,

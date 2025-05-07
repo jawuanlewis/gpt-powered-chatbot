@@ -1,3 +1,4 @@
+import { CurrChat } from '@/types/chat';
 import api from './apiClient';
 
 export const chatService = {
@@ -6,7 +7,8 @@ export const chatService = {
     return response.data?.chatHistory ?? [];
   },
 
-  handlePrompt: async (prompt: string) => {
-    return await api.post('/chat/prompt', { prompt });
+  handlePrompt: async (chat: CurrChat, prompt: string) => {
+    const response = await api.post('/chat/prompt', { chat, prompt });
+    return response.data?.chat ?? chat;
   },
 };

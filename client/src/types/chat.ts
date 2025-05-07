@@ -10,6 +10,8 @@ export interface Chat {
   messages: Message[];
 }
 
-export interface ChatHistoryResponse {
-  chatHistory: Chat[];
-}
+export type CurrChat = {
+  id: number;
+  title: string;
+  messages: Message[];
+} | null;
