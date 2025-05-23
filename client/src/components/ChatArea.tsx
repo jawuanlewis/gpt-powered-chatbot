@@ -19,7 +19,7 @@ const ChatArea = ({
   setIsSidebarOpen,
 }: ChatAreaProps) => {
   const [timeOfDay, setTimeOfDay] = useState<string>('');
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(''); // Stores user's current prompt input
 
   useEffect(() => {
     const updateGreeting = () => {
@@ -40,9 +40,12 @@ const ChatArea = ({
     return () => clearInterval(interval);
   }, []);
 
-  const getUpdatedChat = async () => {
+  const updateChat = async () => {
     try {
-      const updatedChat = await chatService.handlePrompt(currentChat, inputValue);
+      const updatedChat = await chatService.handlePrompt(
+        currentChat,
+        inputValue
+      );
       setCurrentChat(updatedChat);
       setInputValue('');
     } catch (error) {
@@ -71,11 +74,11 @@ const ChatArea = ({
           className="chat-input"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && getUpdatedChat()}
+          onKeyDown={(e) => e.key === 'Enter' && updateChat()}
         />
         <button
           className="send-button"
-          onClick={() => getUpdatedChat()}
+          onClick={() => updateChat()}
           aria-label="Send message"
         >
           ➤

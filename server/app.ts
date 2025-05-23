@@ -4,6 +4,7 @@ import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import MongoDBStore from 'connect-mongodb-session';
+import connectDB from './config/db.js';
 import chatRoutes from './routes/chatRoutes.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -61,12 +62,12 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET as string,
     // store: store,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
       secure: process.env.NODE_ENV !== 'development',
       sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none',
-      maxAge: undefined,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
     proxy: true,
   })
@@ -79,6 +80,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     message: '(Server) Something went wrong!',
   });
 });
+
+connectDB();
 
 // API Endpoints
 app.use('/api/chat', chatRoutes);

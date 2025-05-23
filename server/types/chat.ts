@@ -1,11 +1,14 @@
-export interface Message {
-  id: number;
-  role: string;
+import { Document } from 'mongoose';
+
+export interface IMessage {
+  id: string;
+  role: 'user' | 'assistant';
   content: string;
 }
 
-export interface Chat {
-  id: number;
+export interface IChat extends Document {
+  id: string;
+  userId: string;
   title: string;
-  messages: Message[];
+  messages: IMessage[];
 }
