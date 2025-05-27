@@ -41,6 +41,8 @@ const ChatArea = ({
   }, []);
 
   const updateChat = async () => {
+    if (!inputValue.trim()) return;
+
     try {
       const updatedChat = await chatService.handlePrompt(
         currentChat,

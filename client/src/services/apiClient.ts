@@ -1,10 +1,18 @@
 import axios, { AxiosError } from 'axios';
+import { getClientId } from '@/utils/clientId';
 
 const api = axios.create({
   baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
+});
+
+// Add client ID to all requests
+api.interceptors.request.use((config) => {
+  config.headers['X-Client-ID'] = getClientId();
+  return config;
 });
 
 // Response interceptor for handling errors

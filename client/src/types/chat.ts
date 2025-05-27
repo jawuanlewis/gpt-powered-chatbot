@@ -1,17 +1,19 @@
 export interface Message {
-  id: number;
-  role: string;
+  id: string;
+  role: 'user' | 'assistant';
   content: string;
 }
 
 export interface Chat {
-  id: number;
+  id: string;
+  userId: string;
   title: string;
   messages: Message[];
 }
 
 export type CurrChat = {
-  id: number;
+  id: string;
+  userId: string;
   title: string;
   messages: Message[];
 } | null;

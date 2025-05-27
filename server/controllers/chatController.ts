@@ -7,8 +7,8 @@ import openai from '../config/open-ai.js';
 const chatController = {
   getChatHistory: async (req: Request, res: Response) => {
     try {
-      const userId = req.sessionID;
-      const chats = await Chat.find({ userId }).sort({ updatedAt: -1 }); // optional sort
+      const userId = req.headers['x-client-id'] as string;
+      const chats = await Chat.find({ userId }).sort({ updatedAt: -1 });
       return res.json({ chatHistory: chats });
     } catch (error) {
       console.error('(Server) Error getting chat history:', error);
@@ -19,7 +19,7 @@ const chatController = {
   handlePrompt: async (req: Request, res: Response) => {
     try {
       const { chat, prompt } = req.body;
-      const userId = req.sessionID;
+      const userId = req.headers['x-client-id'] as string;
 
       if (!prompt || typeof prompt !== 'string') {
         return res
@@ -47,9 +47,18 @@ const chatController = {
         chatDoc = await Chat.findOne({ id: chat.id, userId });
 
         if (!chatDoc) {
+          chatDoc = await Chat.findOne({ id: chat.id });
+
+          if (chatDoc) {
+            chatDoc.userId = userId;
+            await chatDoc.save();
+          }
+        }
+
+        if (!chatDoc) {
           return res
             .status(404)
-            .json({ error: '(Server) Chat not found for this session.' });
+            .json({ error: '(Server) Chat not found for this client.' });
         }
 
         chatDoc.messages.push(newMessage);
