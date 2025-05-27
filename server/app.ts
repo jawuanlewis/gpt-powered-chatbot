@@ -18,17 +18,16 @@ app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// // Configure MongoDB session store
-// const MongoStore = MongoDBStore(session);
-// const store = new MongoStore({
-//   uri: process.env.MONGO_URI as string,
-//   databaseName: process.env.DB_NAME as string,
-//   collection: 'sessions',
-// });
+// Configure MongoDB session store
+const MongoStore = MongoDBStore(session);
+const store = new MongoStore({
+  uri: process.env.MONGO_URI as string,
+  collection: 'sessions',
+});
 
-// store.on('error', (error: Error) => {
-//   console.error('(Server) Session store error:', error);
-// });
+store.on('error', (error: Error) => {
+  console.error('(Server) Session store error:', error);
+});
 
 // CORS config based on environment
 const allowedOrigins = [
@@ -36,6 +35,10 @@ const allowedOrigins = [
   // process.env.PROD_URL,
   // process.env.STAGING_URL,
 ];
+
+/************************
+ * App Middleware Setup *
+ ************************/
 
 app.use(compression());
 
@@ -61,9 +64,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: process.env.SESSION_SECRET as string,
-    // store: store,
-    resave: true,
-    saveUninitialized: true,
+    store: store,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV !== 'development',
       sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none',
@@ -81,10 +84,14 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-connectDB();
-
 // API Endpoints
 app.use('/api/chat', chatRoutes);
+
+/*******************
+ * Run Application *
+ *******************/
+
+connectDB();
 
 // Start server
 const PORT = process.env.PORT || 3000;

@@ -9,10 +9,10 @@ const chatController = {
     try {
       const userId = req.sessionID;
       const chats = await Chat.find({ userId }).sort({ updatedAt: -1 }); // optional sort
-      res.json({ chatHistory: chats });
+      return res.json({ chatHistory: chats });
     } catch (error) {
       console.error('(Server) Error getting chat history:', error);
-      res.status(500).json({ error: 'Failed to get chat history.' });
+      return res.status(500).json({ error: 'Failed to get chat history.' });
     }
   },
 
@@ -35,7 +35,7 @@ const chatController = {
       };
 
       if (!chat || !chat.id) {
-        // === Create new chat ===
+        /*** Create new chat ***/
         chatDoc = await Chat.create({
           id: nanoid(),
           userId,
@@ -43,7 +43,7 @@ const chatController = {
           messages: [newMessage],
         });
       } else {
-        // === Update existing chat ===
+        /*** Update existing chat ***/
         chatDoc = await Chat.findOne({ id: chat.id, userId });
 
         if (!chatDoc) {
@@ -68,7 +68,7 @@ const chatController = {
 
       const completionText = completion.choices[0].message.content;
       if (!completionText) {
-        throw new Error('(Server) No response from the OpenAI model.');
+        throw new Error('(Server) No response from the model.');
       }
 
       /*** Add assistant's message ***/
@@ -84,7 +84,7 @@ const chatController = {
       return res.json({ chat: chatDoc });
     } catch (error) {
       console.error('(Server) Error handling user prompt:', error);
-      return res.status(500).json({ error: 'Failed to process chat prompt.' });
+      return res.status(500).json({ error: 'Failed to process user prompt.' });
     }
   },
 };
