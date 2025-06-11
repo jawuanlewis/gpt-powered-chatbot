@@ -29,13 +29,15 @@
   border-radius: 0.5rem;
   color: var(--light-text);
   font-size: 1rem;
-  &::placeholder {
-    color: var(--light-text);
-  }
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--purple-accent);
-  }
+}
+
+.chat-input::placeholder {
+  color: var(--light-text);
+}
+
+.chat-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--purple-accent);
 }
 
 .send-button {
@@ -48,7 +50,8 @@
   padding: 0.5rem;
   font-size: 1.2rem;
   transition: color 0.2s ease;
-  &:hover {
-    color: var(--purple-accent);
-  }
+}
+
+.send-button:hover {
+  color: var(--purple-accent);
 }

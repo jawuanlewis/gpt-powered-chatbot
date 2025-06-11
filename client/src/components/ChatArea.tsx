@@ -44,11 +44,16 @@ const ChatArea = ({
     if (!inputValue.trim()) return;
 
     try {
-      const updatedChat = await chatService.handlePrompt(
-        currentChat,
-        inputValue
-      );
-      setCurrentChat(updatedChat);
+      if (!currentChat) {
+        const newChat = await chatService.handlePrompt(null, inputValue);
+        setCurrentChat(newChat);
+      } else {
+        const updatedChat = await chatService.handlePrompt(
+          currentChat,
+          inputValue
+        );
+        setCurrentChat(updatedChat);
+      }
       setInputValue('');
     } catch (error) {
       console.error('(Client) Error calling handlePrompt() API:', error);

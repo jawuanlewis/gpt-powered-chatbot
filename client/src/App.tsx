@@ -7,7 +7,10 @@ import '@/styles/App.css';
 
 const App = () => {
   const [chats, setChats] = useState<Chat[]>([]);
-  const [activeChat, setActiveChat] = useState<CurrChat>(null);
+  const [activeChat, setActiveChat] = useState<CurrChat>(() => {
+    const savedChat = sessionStorage.getItem('ACTIVE_CHAT');
+    return savedChat ? JSON.parse(savedChat) : null;
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   useEffect(() => {
@@ -19,10 +22,8 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (chats.length > 0 && !activeChat) {
-      setActiveChat(chats[0]);
-    }
-  }, [chats, activeChat]);
+    sessionStorage.setItem('ACTIVE_CHAT', JSON.stringify(activeChat));
+  }, [activeChat]);
 
   const getChats = async () => {
     try {
@@ -32,10 +33,32 @@ const App = () => {
     }
   };
 
+  const handleUpdateChatTitle = async (chatId: string, newTitle: string) => {
+    try {
+      await chatService.updateChatTitle(chatId, newTitle);
+      setChats(
+        chats.map((chat) =>
+          chat.id === chatId ? { ...chat, title: newTitle } : chat
+        )
+      );
+      if (activeChat?.id === chatId) {
+        setActiveChat({ ...activeChat, title: newTitle });
+      }
+    } catch (error) {
+      console.error('(Client) Error updating chat title:', error);
+    }
+  };
+
   return (
     <div className="app">
       <div className={`sidebar ${!isSidebarOpen ? 'hidden' : ''}`}>
-        <SideBar chats={chats} setIsSidebarOpen={setIsSidebarOpen} />
+        <SideBar
+          chats={chats}
+          setIsSidebarOpen={setIsSidebarOpen}
+          currentChat={activeChat}
+          setCurrentChat={setActiveChat}
+          onUpdateChatTitle={handleUpdateChatTitle}
+        />
       </div>
       <div className="chat-area">
         <ChatArea

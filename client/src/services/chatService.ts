@@ -11,4 +11,11 @@ export const chatService = {
     const response = await api.post('/chat/prompt', { chat, prompt });
     return response.data?.chat ?? chat;
   },
+
+  updateChatTitle: async (chatId: string, newTitle: string) => {
+    const response = await api.patch(`/chat/${chatId}/title`, {
+      title: newTitle,
+    });
+    return response.data?.chat;
+  },
 };

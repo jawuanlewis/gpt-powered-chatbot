@@ -12,9 +12,10 @@
   margin-top: 2rem;
   margin-bottom: 3rem;
   transition: background-color 0.2s;
-  &:hover {
-    background-color: rgba(147, 51, 234, 0.1);
-  }
+}
+
+.new-chat-btn:hover {
+  background-color: rgba(147, 51, 234, 0.1);
 }
 
 .recent-chats-title {
@@ -26,14 +27,4 @@
 .chat-list {
   list-style: none;
   padding: 0;
-}
-
-.chat-item {
-  padding: 0.75rem;
-  cursor: pointer;
-  border-radius: 0.5rem;
-  transition: background-color 0.2s;
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
 }

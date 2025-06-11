@@ -11,5 +11,9 @@ router.post(
   '/prompt',
   chatController.handlePrompt as unknown as RequestHandler
 );
+router.patch(
+  '/:chatId/title',
+  chatController.updateChatTitle as unknown as RequestHandler
+);
 
 export default router;

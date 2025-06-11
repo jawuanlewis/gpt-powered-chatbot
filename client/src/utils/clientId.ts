@@ -1,5 +1,6 @@
 const CLIENT_ID_KEY = 'chatbot_client_id';
 
+// Generate unique ID for each user
 export const getClientId = (): string => {
   let clientId = sessionStorage.getItem(CLIENT_ID_KEY);
 

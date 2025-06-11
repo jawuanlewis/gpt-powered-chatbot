@@ -37,11 +37,12 @@
   padding-top: 1rem;
   background-color: var(--side-background);
   transition: transform 0.3s ease;
-  &.hidden {
-    transform: translateX(-100%);
-    width: 0;
-    padding: 0;
-  }
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+  width: 0;
+  padding: 0;
 }
 
 .chat-area {

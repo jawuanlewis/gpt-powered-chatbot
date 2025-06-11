@@ -7,6 +7,7 @@ import openai from '../config/open-ai.js';
 const chatController = {
   getChatHistory: async (req: Request, res: Response) => {
     try {
+      // Retrieve active user's chat history
       const userId = req.headers['x-client-id'] as string;
       const chats = await Chat.find({ userId }).sort({ updatedAt: -1 });
       return res.json({ chatHistory: chats });
@@ -35,7 +36,7 @@ const chatController = {
       };
 
       if (!chat || !chat.id) {
-        /*** Create new chat ***/
+        // Create new chat
         chatDoc = await Chat.create({
           id: nanoid(),
           userId,
@@ -43,7 +44,7 @@ const chatController = {
           messages: [newMessage],
         });
       } else {
-        /*** Update existing chat ***/
+        // Update existing chat
         chatDoc = await Chat.findOne({ id: chat.id, userId });
 
         if (!chatDoc) {
@@ -64,7 +65,7 @@ const chatController = {
         chatDoc.messages.push(newMessage);
       }
 
-      /*** Generate assistant response ***/
+      // Generate assistant response
       const messagesForAssistant = chatDoc.messages.map((msg) => ({
         role: msg.role,
         content: msg.content,
@@ -80,7 +81,7 @@ const chatController = {
         throw new Error('(Server) No response from the model.');
       }
 
-      /*** Add assistant's message ***/
+      // Add assistant's message
       const assistantMessage: IMessage = {
         id: nanoid(),
         role: 'assistant',
@@ -94,6 +95,35 @@ const chatController = {
     } catch (error) {
       console.error('(Server) Error handling user prompt:', error);
       return res.status(500).json({ error: 'Failed to process user prompt.' });
+    }
+  },
+
+  updateChatTitle: async (req: Request, res: Response) => {
+    try {
+      const { chatId } = req.params;
+      const { title } = req.body;
+      const userId = req.headers['x-client-id'] as string;
+
+      if (!title || typeof title !== 'string') {
+        return res
+          .status(400)
+          .json({ error: '(Server) Title is required and must be a string.' });
+      }
+
+      const chatDoc = await Chat.findOne({ id: chatId, userId });
+      if (!chatDoc) {
+        return res
+          .status(404)
+          .json({ error: '(Server) Chat not found for this client.' });
+      }
+
+      chatDoc.title = title;
+      await chatDoc.save();
+
+      return res.json({ chat: chatDoc });
+    } catch (error) {
+      console.error('(Server) Error updating chat title:', error);
+      return res.status(500).json({ error: 'Failed to update chat title.' });
     }
   },
 };
