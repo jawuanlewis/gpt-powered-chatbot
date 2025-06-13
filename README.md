@@ -61,15 +61,15 @@ A custom-built ChatGPT-style AI assistant powered by OpenAI models, featuring pe
 ```bash
 gpt-powered-chatbot/
 ├── client/               # Frontend
-│   └── src/
-│       ├── assets/         # Fonts, icons, etc.
-│       ├── components/     # Reusable UI components
-│       ├── services/       # API calls & services
-│       ├── styles/         # Component styles
-│       ├── types/          # TypeScript type definitions
-│       ├── utils/          # Helper functions
-│       ├── App.tsx         # Root component
-│       └── main.tsx        # Entry point
+│   ├── src/
+│   │   ├── assets/         # Fonts, icons, etc.
+│   │   ├── components/     # Reusable UI components
+│   │   ├── services/       # API calls & services
+│   │   ├── styles/         # Component styles
+│   │   ├── types/          # TypeScript type definitions
+│   │   ├── utils/          # Helper functions
+│   │   ├── App.tsx         # Root component
+│   │   └── main.tsx        # Entry point
 │   ├── index.html
 │   ├── vite.config.ts
 │   └── package.json
