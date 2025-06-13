@@ -1,0 +1,30 @@
+.new-chat-btn {
+  display: block;
+  margin: auto;
+  width: 80%;
+  padding: 1rem;
+  font-size: clamp(1rem, 2.5vw, 2.5vh);
+  background-color: var(--main-background);
+  color: var(--light-text);
+  border: 2px solid var(--purple-accent);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  transition: background-color 0.2s;
+}
+
+.new-chat-btn:hover {
+  background-color: rgba(147, 51, 234, 0.1);
+}
+
+.recent-chats-title {
+  font-size: clamp(1rem, 2.5vw, 2.5vh);
+  color: var(--purple-accent);
+  line-height: 2.5;
+}
+
+.chat-list {
+  list-style: none;
+  padding: 0;
+}

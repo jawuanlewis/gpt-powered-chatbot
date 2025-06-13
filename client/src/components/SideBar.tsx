@@ -1,28 +1,47 @@
-interface Chat {
-  id: number;
-  title: string;
-}
+import { Dispatch, SetStateAction } from 'react';
+import { Chat, CurrChat } from '@/types/chat';
+import MenuButton from './MenuButton';
+import ChatItem from './ChatItem';
+import '@/styles/SideBar.css';
 
-interface SidebarProps {
+interface SideBarProps {
   chats: Chat[];
+  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
+  currentChat: CurrChat;
+  setCurrentChat: Dispatch<SetStateAction<CurrChat>>;
+  onUpdateChatTitle?: (chatId: string, newTitle: string) => void;
 }
 
-const SideBar = ({ chats }: SidebarProps) => {
+const SideBar = ({
+  chats,
+  setIsSidebarOpen,
+  currentChat,
+  setCurrentChat,
+  onUpdateChatTitle,
+}: SideBarProps) => {
   return (
-    <div className="sidebar">
-      <button className="new-chat-btn">New Chat</button>
+    <>
+      <MenuButton onClick={() => setIsSidebarOpen(false)} />
+
+      <button className="new-chat-btn" onClick={() => setCurrentChat(null)}>
+        New Chat
+      </button>
 
       <div className="recent-chats">
         <label className="recent-chats-title">Recent Chats</label>
         <ul className="chat-list">
           {chats.map((chat) => (
-            <li key={chat.id} className="chat-item">
-              {chat.title}
-            </li>
+            <ChatItem
+              key={chat.id}
+              chat={chat}
+              isActive={currentChat?.id === chat.id}
+              onSelect={setCurrentChat}
+              onUpdateTitle={onUpdateChatTitle}
+            />
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 

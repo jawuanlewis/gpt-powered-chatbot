@@ -3,25 +3,47 @@
   "version": "1.0.0",
   "description": "Chatbot powered by ChatGPT",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
-    "start": "node server/index.js",
-    "client": "cd client && npm run dev",
-    "build": "cd client && npm install && npm run build",
-    "format": "prettier --write .",
-    "format-check": "prettier --check .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/app.js",
+    "dev:server": "concurrently \"tsc --watch\" \"nodemon dist/app.js\"",
+    "dev:client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build:server": "tsc",
+    "build:client": "cd client && npm run build",
+    "build": "npm run build:server && npm run build:client",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "npm run build",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
   },
   "author": "Jawuan Lewis",
   "license": "MIT",
   "dependencies": {
-    "colors": "^1.4.0",
+    "compression": "^1.8.0",
+    "connect-mongodb-session": "^5.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "openai": "^4.84.0",
-    "readline-sync": "^1.4.10"
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.15.0",
+    "nanoid": "^5.1.5",
+    "openai": "^4.84.0"
   },
   "devDependencies": {
-    "prettier": "^3.5.0"
+    "@types/compression": "^1.7.5",
+    "@types/connect-mongodb-session": "^2.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.1",
+    "@types/express-session": "^1.18.1",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^20.11.24",
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "prettier": {
     "semi": true,

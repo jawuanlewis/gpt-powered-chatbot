@@ -1,0 +1,58 @@
+/* Reset some default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('@/assets/fonts/NotoSans/NotoSans.ttf');
+}
+
+:root {
+  --main-background: #343434;
+  --side-background: #1e1e1e;
+  --inner-background: #606060;
+  --light-text: #ffffff;
+  --purple-accent: #ba6cff;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  min-height: 100vh;
+  font-family: 'Noto Sans', serif;
+  background-color: var(--main-background);
+  color: var(--light-text);
+}
+
+.menu-btn {
+  cursor: pointer;
+}
+
+.sidebar {
+  width: 24vw;
+  padding: 2rem;
+  padding-top: 1rem;
+  background-color: var(--side-background);
+  transition: transform 0.3s ease;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+  width: 0;
+  padding: 0;
+}
+
+.chat-area {
+  padding: 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-background);
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}

@@ -1,0 +1,33 @@
+.conversation-box {
+  width: 60vw;
+  height: 60vh;
+  padding: 2rem;
+  margin: 5rem 0;
+  background-color: var(--side-background);
+  border-radius: 0.5rem;
+  overflow-y: auto;
+}
+
+.conversation-box ul {
+  list-style: none;
+}
+
+.conversation-box ul li {
+  padding: 0.75rem;
+  margin: 2rem 0;
+  border-radius: 0.5rem;
+  width: fit-content;
+  max-width: 70%;
+}
+
+.user-message {
+  background-color: var(--purple-accent);
+  margin-left: auto !important;
+  margin-right: 1rem !important;
+}
+
+.assistant-message {
+  background-color: var(--inner-background);
+  margin-right: auto !important;
+  margin-left: 1rem !important;
+}
