@@ -7,9 +7,9 @@
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [Development](#-development)
-- [Usage](#-usage)
+- [Installation](#%EF%B8%8F-installation)
+- [Development](#%EF%B8%8F-development)
+- [Usage](#%EF%B8%8F-usage)
 - [Next Steps](#-next-steps)
 
 ## 🧠 Project Overview
