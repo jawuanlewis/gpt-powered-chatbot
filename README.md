@@ -1,106 +1,199 @@
-# ChatGPT Chatbot
+# Jawuan's GPT
 
-A command-line chatbot built with Node.js and TypeScript, powered by ChatGPT. Users can have ongoing conversations with the bot and ask general questions.
+## 📚 Table of Contents
 
-- The bot uses OpenAI's GPT-4o mini model
-- Built with TypeScript for type safety and better development experience
-- There are potential plans to expand this app by adding a proper interface and features
+- [Project Overview](#-project-overview)
+- [Live Demo](#-live-demo)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Development](#-development)
+- [Usage](#-usage)
+- [Next Steps](#-next-steps)
 
-## Prerequisites
+## 🧠 Project Overview
+
+A custom-built ChatGPT-style AI assistant powered by OpenAI models, featuring persistent chat history, sleek UI, and full-stack MERN architecture.
+
+## 🚀 Live Demo
+
+- Application live here soon: [Jawuan's GPT]()
+- Initial designs available here: [Figma Designs](https://www.figma.com/design/7L2M9WD2Lmsjke14rtwscX/Chatbot?node-id=0-1&t=gsJwMsjE6Q6RSxH0-1)
+
+## ✨ Features
+
+**AI-Powered Conversations**
+
+- Powered by OpenAI's GPT-4 API
+- Natural language understanding and generation
+- Context-aware responses
+- Support for complex queries and discussions
+
+**Chat Management**
+
+- Create and manage multiple chat sessions
+- Persistent chat history
+- Rename and organize conversations
+- Sidebar navigation between chats
+
+**Modern User Interface**
+
+- Clean, intuitive design
+- Real-time message streaming
+- Smooth animations and transitions
+
+**Developer Experience**
+
+- Full TypeScript support
+- Hot reloading in development
+- Comprehensive project structure
+- Code formatting and linting
+
+## 💻 Tech Stack
+
+- **Frontend:** React (Vite), TypeScript, CSS
+- **Backend:** Node.js, Express.js, OpenAI API
+- **Database:** MongoDB (with Mongoose)
+
+## 📁 Project Structure
+
+```bash
+gpt-powered-chatbot/
+├── client/               # Frontend
+│   └── src/
+│       ├── assets/         # Fonts, icons, etc.
+│       ├── components/     # Reusable UI components
+│       ├── services/       # API calls & services
+│       ├── styles/         # Component styles
+│       ├── types/          # TypeScript type definitions
+│       ├── utils/          # Helper functions
+│       ├── App.tsx         # Root component
+│       └── main.tsx        # Entry point
+│   ├── index.html
+│   ├── vite.config.ts
+│   └── package.json
+├── server/               # Backend
+│   ├── config/             # Environment and DB config
+│   ├── controllers/        # Request handler logic
+│   ├── models/             # Mongoose models
+│   ├── routes/             # API routes
+│   ├── types/              # Shared backend types
+│   └── app.ts              # Entry point for Express app
+├── .gitignore
+└── package.json          # Root package config
+```
+
+## ⚙️ Installation
+
+### Prerequisites
 
 - [Node.js](https://nodejs.org/en/download) (v16 or higher recommended)
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart)
 
-## Setup Instructions
+### Local Setup
 
 1. Clone this repository and navigate to the project directory:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/jawuanlewis/gpt-powered-chatbot.git
 cd gpt-powered-chatbot
 ```
 
-2. Create a `.env` file in the root directory and add your OpenAI API key:
-
-```bash
-OPENAI_API_KEY=your-api-key
-```
-
-3. Install dependencies:
+2. Install server dependencies:
 
 ```bash
 npm install
 ```
 
-## Running the Application
+3. Install client dependencies:
 
-### Development Mode
+```bash
+cd client
+npm install
+cd ..
+```
 
-For development with hot reloading:
+4. Create a `.env` file in the root directory and add your OpenAI API key:
+
+```bash
+OPENAI_API_KEY=your-api-key
+```
+
+## 🛠️ Development
+
+### Running the Application
+
+You can run the client and server concurrently in development mode:
 
 ```bash
 npm run dev
 ```
 
-To run TypeScript directly without compilation:
+Or run them separately:
 
 ```bash
-npm run dev:run
+# Run server only
+npm run dev:server
+
+# Run client only
+npm run dev:client
 ```
 
-### Production Mode
+### Building for Production
 
-1. Build the TypeScript files:
+To build both client and server:
 
 ```bash
 npm run build
 ```
 
-2. Run the compiled application:
+Or build them separately:
+
+```bash
+# Build server only
+npm run build:server
+
+# Build client only
+npm run build:client
+```
+
+### Running in Production
+
+After building, start the application:
 
 ```bash
 npm start
 ```
 
-### Type Checking
+### Code Quality
 
-To verify TypeScript compilation without generating files:
+Format your code:
 
 ```bash
-npm run type-check
+npm run format
 ```
 
-## Usage
+Check code formatting:
 
-Once the application is running:
-
-1. Type your message and press Enter to chat with the bot
-2. The bot will maintain context of the conversation
-3. Type "exit" to end the chat session
-
-## Project Structure
-
-```
-gpt-powered-chatbot/
-├── server/
-│   ├── config/
-│   │   └── open-ai.ts    # OpenAI configuration
-│   └── index.ts          # Main application entry point
-├── dist/                 # Compiled JavaScript files
-├── package.json
-├── tsconfig.json
-└── .env
+```bash
+npm run lint
 ```
 
-## Development
+## ▶️ Usage
 
-- The project uses TypeScript for type safety
-- ES modules are used for imports/exports
-- Prettier is configured for code formatting
+Once the application is running, you can:
 
-## Future Plans
+1. Navigate to `http://localhost:5173` in your browser.
+2. Start a conversation by typing your message in the input box.
+3. Press "Enter" or click the send button to receive a response from the assistant.
+4. View existing conversations which will be displayed in the sidebar menu.
+5. Use the sidebar to switch between or rename chat sessions.
+6. Interact freely — the assistant is powered by the OpenAI GPT-4 API for high-quality responses.
 
-- Add a proper web interface
-- Implement additional features and commands
-- Add conversation history persistence
-- Implement user authentication
+## 🔮 Next Steps
+
+- Add user authentication
+- Chat export or download
+- Add customization support & menu options
+- Continuous visual improvements
