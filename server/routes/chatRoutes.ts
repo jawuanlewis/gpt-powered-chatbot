@@ -12,7 +12,7 @@ router.post(
   chatController.handlePrompt as unknown as RequestHandler
 );
 router.patch(
-  '/:chatId/title',
+  '/:chatId',
   chatController.updateChatTitle as unknown as RequestHandler
 );
 

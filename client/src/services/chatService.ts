@@ -13,7 +13,7 @@ export const chatService = {
   },
 
   updateChatTitle: async (chatId: string, newTitle: string) => {
-    const response = await api.patch(`/chat/${chatId}/title`, {
+    const response = await api.patch(`/chat/${chatId}`, {
       title: newTitle,
     });
     return response.data?.chat;
