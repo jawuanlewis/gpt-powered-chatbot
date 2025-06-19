@@ -4,10 +4,10 @@ import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import MongoDBStore from 'connect-mongodb-session';
-import connectDB from './config/db.js';
+import { connectDB, closeDB } from './config/db.js';
 import chatRoutes from './routes/chatRoutes.js';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import path, { dirname } from 'path';
 
 dotenv.config();
 
@@ -32,8 +32,8 @@ store.on('error', (error: Error) => {
 // CORS config based on environment
 const allowedOrigins = [
   'http://localhost:5173',
-  // process.env.PROD_URL,
-  // process.env.STAGING_URL,
+  process.env.PROD_URL,
+  process.env.STAGING_URL,
 ];
 
 /************************
@@ -54,7 +54,7 @@ app.use(
       return callback(null, true);
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
@@ -88,6 +88,15 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // API Endpoints
 app.use('/api/chat', chatRoutes);
 
+// Serve the frontend in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  });
+}
+
 /*******************
  * Run Application *
  *******************/
@@ -102,5 +111,6 @@ app.listen(PORT, () => {
 
 // App shutdown
 process.on('SIGINT', async () => {
+  await closeDB();
   process.exit(0);
 });
