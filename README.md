@@ -88,7 +88,7 @@ gpt-powered-chatbot/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/en/download) (v16 or higher recommended)
+- [Node.js](https://nodejs.org/en/download) (v18 or higher)
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart)
 
 ### Local Setup

@@ -1,9 +1,12 @@
 {
   "name": "chatbot",
   "version": "1.0.0",
-  "description": "Chatbot powered by ChatGPT",
+  "description": "Personal chatbot powered by OpenAI",
   "type": "module",
   "main": "dist/app.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node dist/app.js",
     "dev:server": "concurrently \"tsc --watch\" \"nodemon dist/app.js\"",
