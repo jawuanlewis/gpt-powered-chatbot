@@ -38,12 +38,12 @@ if (process.env.MONGO_URI) {
 // CORS config based on environment
 const allowedOrigins = ['http://localhost:5173'];
 
-// Add production URLs only if they exist
+// Add production URLs only if they exist, and strip trailing slashes
 if (process.env.PROD_URL) {
-  allowedOrigins.push(process.env.PROD_URL);
+  allowedOrigins.push(process.env.PROD_URL.replace(/\/$/, ''));
 }
 if (process.env.STAGING_URL) {
-  allowedOrigins.push(process.env.STAGING_URL);
+  allowedOrigins.push(process.env.STAGING_URL.replace(/\/$/, ''));
 }
 
 console.log('(Server) Allowed origins:', allowedOrigins);
@@ -58,6 +58,7 @@ app.use(compression());
 app.use(
   cors({
     origin: function (origin, callback) {
+      console.log('CORS check for origin:', origin);
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.indexOf(origin) === -1) {
