@@ -100,8 +100,7 @@ const chatController = {
 
   updateChatTitle: async (req: Request, res: Response) => {
     try {
-      const { chatId } = req.params;
-      const { title } = req.body;
+      const { chatId, title } = req.body;
       const userId = req.headers['x-client-id'] as string;
 
       if (!title || typeof title !== 'string') {
