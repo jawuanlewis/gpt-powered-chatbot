@@ -19,22 +19,35 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Configure MongoDB session store
-const MongoStore = MongoDBStore(session);
-const store = new MongoStore({
-  uri: process.env.MONGO_URI as string,
-  collection: 'sessions',
-});
+let store: any = null;
 
-store.on('error', (error: Error) => {
-  console.error('(Server) Session store error:', error);
-});
+if (process.env.MONGO_URI) {
+  const MongoStore = MongoDBStore(session);
+  store = new MongoStore({
+    uri: process.env.MONGO_URI as string,
+    collection: 'sessions',
+  });
+
+  store.on('error', (error: Error) => {
+    console.error('(Server) Session store error:', error);
+  });
+} else {
+  console.warn('(Server) MONGO_URI not found, using memory store for sessions');
+}
 
 // CORS config based on environment
-const allowedOrigins = [
-  'http://localhost:5173',
-  process.env.PROD_URL,
-  process.env.STAGING_URL,
-].filter(Boolean);
+const allowedOrigins = ['http://localhost:5173'];
+
+// Add production URLs only if they exist
+if (process.env.PROD_URL) {
+  allowedOrigins.push(process.env.PROD_URL);
+}
+if (process.env.STAGING_URL) {
+  allowedOrigins.push(process.env.STAGING_URL);
+}
+
+console.log('(Server) Allowed origins:', allowedOrigins);
+console.log('(Server) NODE_ENV:', process.env.NODE_ENV);
 
 /************************
  * App Middleware Setup *
@@ -65,7 +78,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: process.env.SESSION_SECRET as string,
-    store: store,
+    store: store || undefined,
     resave: false,
     saveUninitialized: false,
     cookie: {
