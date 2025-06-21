@@ -53,38 +53,25 @@ console.log('(Server) NODE_ENV:', process.env.NODE_ENV);
  * App Middleware Setup *
  ************************/
 
+console.log('(Server) Registering compression middleware');
 app.use(compression());
 
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       console.log('CORS check for origin:', origin);
-//       if (!origin) return callback(null, true);
+console.log('(Server) Registering CORS middleware');
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
-//       if (allowedOrigins.indexOf(origin) === -1) {
-//         const msg = '(CORS) Access from this origin not allowed.';
-//         return callback(new Error(msg), false);
-//       }
-//       return callback(null, true);
-//     },
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//   })
-// );
-
-// app.use(
-//   cors({
-//     origin: allowedOrigins,
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//   })
-// );
-
+console.log('(Server) Registering JSON body parser');
 app.use(express.json());
+console.log('(Server) Registering URL-encoded body parser');
 app.use(express.urlencoded({ extended: true }));
 
+console.log('(Server) Registering session middleware');
 app.use(
   session({
     secret: process.env.SESSION_SECRET as string,
@@ -100,6 +87,7 @@ app.use(
   })
 );
 
+console.log('(Server) Registering error handler middleware');
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({
@@ -109,12 +97,15 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // API Endpoints
+console.log('(Server) Registering /api/chat route');
 app.use('/api/chat', chatRoutes);
 
 // Serve the frontend in production
 if (process.env.NODE_ENV === 'production') {
+  console.log('(Server) Registering static file serving for client/dist');
   app.use(express.static(path.join(__dirname, '../client/dist')));
 
+  console.log('(Server) Registering catch-all route for SPA');
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
   });
