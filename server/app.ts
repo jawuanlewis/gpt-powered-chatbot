@@ -55,18 +55,27 @@ console.log('(Server) NODE_ENV:', process.env.NODE_ENV);
 
 app.use(compression());
 
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       console.log('CORS check for origin:', origin);
+//       if (!origin) return callback(null, true);
+
+//       if (allowedOrigins.indexOf(origin) === -1) {
+//         const msg = '(CORS) Access from this origin not allowed.';
+//         return callback(new Error(msg), false);
+//       }
+//       return callback(null, true);
+//     },
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//   })
+// );
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      console.log('CORS check for origin:', origin);
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = '(CORS) Access from this origin not allowed.';
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
