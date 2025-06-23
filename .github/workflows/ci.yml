@@ -29,14 +29,14 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Clean install
+      - name: Install dependencies
         run: |
           rm -rf node_modules package-lock.json
           npm install
           npm install --prefix client
 
-      - name: List installed types
-        run: ls -l node_modules/@types
+      - name: Force install type packages
+        run: npm install --save-dev @types/express @types/express-session @types/compression @types/cors @types/connect-mongodb-session
 
       - name: Build application
         run: npm run build
