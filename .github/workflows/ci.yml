@@ -29,10 +29,14 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Clean install
         run: |
-          npm ci
+          rm -rf node_modules package-lock.json
+          npm install
           npm install --prefix client
+
+      - name: List installed types
+        run: ls -l node_modules/@types
 
       - name: Build application
         run: npm run build
