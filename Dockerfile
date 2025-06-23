@@ -2,9 +2,9 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install root dependencies
-COPY package*.json ./
-COPY client/package*.json ./client/
+# Install all dependencies
+COPY package.json package-lock.json ./
+COPY client/package.json client/package-lock.json ./client/
 RUN npm install && npm install --prefix client
 
 # Copy source code
@@ -16,12 +16,13 @@ RUN npm run build
 FROM node:20-alpine AS production
 WORKDIR /app
 
-COPY --from=builder /app/package*.json ./
+# Copy only the built output and production dependencies
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package-lock.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/client/dist ./client/dist
 RUN npm install --omit=dev
 
 EXPOSE 3000
 
-# Start the server
 CMD ["node", "dist/app.js"] 
