@@ -65,33 +65,52 @@ const chatController = {
         chatDoc.messages.push(newMessage);
       }
 
-      // Generate assistant response
       const messagesForAssistant = chatDoc.messages.map((msg) => ({
         role: msg.role,
         content: msg.content,
       }));
 
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: messagesForAssistant,
-      });
+      // Generate assistant response
+      try {
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: messagesForAssistant,
+        });
 
-      const completionText = completion.choices[0].message.content;
-      if (!completionText) {
-        throw new Error('(Server) No response from the model.');
+        const completionText = completion.choices[0].message.content;
+        if (!completionText) {
+          throw new Error('(Server) No response from the model.');
+        }
+
+        // Add assistant's message
+        const assistantMessage: IMessage = {
+          id: nanoid(),
+          role: 'assistant',
+          content: completionText,
+        };
+
+        chatDoc.messages.push(assistantMessage);
+        await chatDoc.save();
+
+        return res.json({ chat: chatDoc });
+      } catch (openaiError: any) {
+        console.error('(Server) OpenAI API error:', openaiError);
+
+        // Handle authentication errors gracefully
+        if (
+          openaiError?.status === 401 ||
+          openaiError?.message?.includes('authentication')
+        ) {
+          return res.status(503).json({
+            error:
+              'AI service temporarily unavailable. Please try again later.',
+          });
+        }
+
+        return res.status(503).json({
+          error: 'Failed to generate AI response. Please try again.',
+        });
       }
-
-      // Add assistant's message
-      const assistantMessage: IMessage = {
-        id: nanoid(),
-        role: 'assistant',
-        content: completionText,
-      };
-
-      chatDoc.messages.push(assistantMessage);
-      await chatDoc.save();
-
-      return res.json({ chat: chatDoc });
     } catch (error) {
       console.error('(Server) Error handling user prompt:', error);
       return res.status(500).json({ error: 'Failed to process user prompt.' });

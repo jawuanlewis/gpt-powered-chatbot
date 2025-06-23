@@ -39,6 +39,9 @@ if (process.env.MONGO_URI) {
 const allowedOrigins = ['http://localhost:5173'];
 
 // Add production URLs only if they exist, and strip trailing slashes
+if (process.env.CUSTOM_URL) {
+  allowedOrigins.push(process.env.CUSTOM_URL.replace(/\/$/, ''));
+}
 if (process.env.PROD_URL) {
   allowedOrigins.push(process.env.PROD_URL.replace(/\/$/, ''));
 }
@@ -46,17 +49,12 @@ if (process.env.STAGING_URL) {
   allowedOrigins.push(process.env.STAGING_URL.replace(/\/$/, ''));
 }
 
-console.log('(Server) Allowed origins:', allowedOrigins);
-console.log('(Server) NODE_ENV:', process.env.NODE_ENV);
-
 /************************
  * App Middleware Setup *
  ************************/
 
-console.log('(Server) Registering compression middleware');
 app.use(compression());
 
-console.log('(Server) Registering CORS middleware');
 app.use(
   cors({
     origin: allowedOrigins,
@@ -66,12 +64,9 @@ app.use(
   })
 );
 
-console.log('(Server) Registering JSON body parser');
 app.use(express.json());
-console.log('(Server) Registering URL-encoded body parser');
 app.use(express.urlencoded({ extended: true }));
 
-console.log('(Server) Registering session middleware');
 app.use(
   session({
     secret: process.env.SESSION_SECRET as string,
@@ -87,7 +82,6 @@ app.use(
   })
 );
 
-console.log('(Server) Registering error handler middleware');
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({
@@ -97,15 +91,12 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // API Endpoints
-console.log('(Server) Registering /api/chat route');
 app.use('/api/chat', chatRoutes);
 
 // Serve the frontend in production
 if (process.env.NODE_ENV === 'production') {
-  console.log('(Server) Registering static file serving for client/dist');
   app.use(express.static(path.join(__dirname, '../client/dist')));
 
-  console.log('(Server) Registering catch-all route for SPA');
   app.get(/^(?!\/api).*/, (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
   });

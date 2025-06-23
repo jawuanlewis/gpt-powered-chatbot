@@ -14,11 +14,11 @@
 
 ## 🧠 Project Overview
 
-A custom-built ChatGPT-style AI assistant powered by OpenAI models, featuring persistent chat history, sleek UI, and full-stack MERN architecture.
+A custom-built AI assistant powered by OpenAI models, featuring persistent chat history, sleek UI, and full-stack MERN architecture.
 
 ## 🚀 Live Demo
 
-- Application live here soon: [Jawuan's GPT]()
+- Application live here: [Jawuan's GPT](https://gpt.jawuanlewis.dev)
 - Initial designs available here: [Figma Designs](https://www.figma.com/design/7L2M9WD2Lmsjke14rtwscX/Chatbot?node-id=0-1&t=gsJwMsjE6Q6RSxH0-1)
 
 ## ✨ Features
@@ -55,11 +55,15 @@ A custom-built ChatGPT-style AI assistant powered by OpenAI models, featuring pe
 - **Frontend:** React (Vite), TypeScript, CSS
 - **Backend:** Node.js, Express.js, OpenAI API
 - **Database:** MongoDB (with Mongoose)
+- **Testing/Deployment:** Docker, GitHub Actions, Heroku
 
 ## 📁 Project Structure
 
 ```bash
 gpt-powered-chatbot/
+├── .github/
+│   ├── workflows/        # Testing & deployment
+│
 ├── client/               # Frontend
 │   ├── src/
 │   │   ├── assets/         # Fonts, icons, etc.
@@ -73,6 +77,7 @@ gpt-powered-chatbot/
 │   ├── index.html
 │   ├── vite.config.ts
 │   └── package.json
+│
 ├── server/               # Backend
 │   ├── config/             # Environment and DB config
 │   ├── controllers/        # Request handler logic
@@ -80,7 +85,9 @@ gpt-powered-chatbot/
 │   ├── routes/             # API routes
 │   ├── types/              # Shared backend types
 │   └── app.ts              # Entry point for Express app
+│
 ├── .gitignore
+├── Dockerfile
 └── package.json          # Root package config
 ```
 
@@ -88,7 +95,7 @@ gpt-powered-chatbot/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/en/download) (v18 or higher)
+- [Node.js](https://nodejs.org/en/download) (v20 or higher)
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart)
 
 ### Local Setup
@@ -184,7 +191,7 @@ npm run lint
 
 Once the application is running, you can:
 
-1. Navigate to `http://localhost:5173` in your browser.
+1. Navigate to `http://localhost:5173` in your browser (if running locally).
 2. Start a conversation by typing your message in the input box.
 3. Press "Enter" or click the send button to receive a response from the assistant.
 4. View existing conversations which will be displayed in the sidebar menu.
