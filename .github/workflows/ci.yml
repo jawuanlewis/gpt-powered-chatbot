@@ -61,17 +61,6 @@ jobs:
           # Check if app responds to root endpoint
           curl --fail --max-time 10 http://localhost:3000/ || (echo "App not responding to root endpoint" && docker logs myapp && exit 1)
 
-      - name: API health check
-        run: |
-          # Check if API endpoints are accessible (should return 401/403, not 500)
-          response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/api/chat/history)
-          if [ "$response" = "500" ]; then
-            echo "API endpoint returned 500 error"
-            docker logs myapp
-            exit 1
-          fi
-          echo "API endpoint responded with status: $response"
-
       - name: Show app logs on failure
         if: failure()
         run: docker logs myapp

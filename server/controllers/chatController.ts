@@ -95,18 +95,6 @@ const chatController = {
         return res.json({ chat: chatDoc });
       } catch (openaiError: any) {
         console.error('(Server) OpenAI API error:', openaiError);
-
-        // Handle authentication errors gracefully
-        if (
-          openaiError?.status === 401 ||
-          openaiError?.message?.includes('authentication')
-        ) {
-          return res.status(503).json({
-            error:
-              'AI service temporarily unavailable. Please try again later.',
-          });
-        }
-
         return res.status(503).json({
           error: 'Failed to generate AI response. Please try again.',
         });
