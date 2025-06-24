@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:6
+        ports: [27017:27017]
+    env:
+      MONGO_URI: mongodb://localhost:27017/test
+      SESSION_SECRET: testsecret123456789
+      OPENAI_API_KEY: sk-test-dummy-key-for-ci-only
+      NODE_ENV: production
+      PROD_URL: https://test.example.com
+      STAGING_URL: https://test-staging.example.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          # Override NODE_ENV to include devDependencies for TypeScript build
+          NODE_ENV=development npm install
+          npm install --prefix client
+
+      - name: Build application
+        run: npm run build
+
+      - name: Build Docker image
+        run: docker build -t myapp .
+
+      - name: Run app container
+        run: |
+          docker run -d --name myapp \
+            -e MONGO_URI="mongodb://host.docker.internal:27017/test" \
+            -e SESSION_SECRET="testsecret123456789" \
+            -e OPENAI_API_KEY="sk-test-dummy-key-for-ci-only" \
+            -e NODE_ENV="production" \
+            -e PROD_URL="https://test.example.com" \
+            -e STAGING_URL="https://test-staging.example.com" \
+            -p 3000:3000 myapp
+
+      - name: Wait for app to start
+        run: sleep 15
+
+      - name: Health check
+        run: |
+          # Check if app responds to root endpoint
+          curl --fail --max-time 10 http://localhost:3000/ || (echo "App not responding to root endpoint" && docker logs myapp && exit 1)
+
+      - name: Show app logs on failure
+        if: failure()
+        run: docker logs myapp
+
+      - name: Cleanup
+        if: always()
+        run: docker stop myapp || true && docker rm myapp || true
