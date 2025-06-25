@@ -95,10 +95,16 @@ app.use('/api/chat', chatRoutes);
 
 // Serve the frontend in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+  const staticDir = path.join(__dirname, '../client/dist');
+  console.log('Serving static files from:', staticDir);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  app.use(express.static(staticDir));
 
   app.get(/^(?!\/api).*/, (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+    console.log('Catch-all route hit for:', req.url);
+    const indexPath = path.join(__dirname, '../client/dist', 'index.html');
+    console.log('Sending file:', indexPath);
+    res.sendFile(indexPath);
   });
 }
 

@@ -20,6 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/client/dist ./client/dist
+RUN ls -l ./client/dist
 RUN npm install --omit=dev
 
 EXPOSE 3000
