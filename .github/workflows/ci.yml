@@ -32,8 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           rm -rf node_modules package-lock.json
-          # Override NODE_ENV to include devDependencies for TypeScript build
-          NODE_ENV=development npm install
+          npm install
           npm install --prefix client
 
       - name: Build application

@@ -1,9 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
-import session from 'express-session';
 import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import MongoDBStore from 'connect-mongodb-session';
 import { connectDB, closeDB } from './config/db.js';
 import chatRoutes from './routes/chatRoutes.js';
 import { fileURLToPath } from 'url';
@@ -18,27 +16,9 @@ app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Configure MongoDB session store
-let store: any = null;
-
-if (process.env.MONGO_URI) {
-  const MongoStore = MongoDBStore(session);
-  store = new MongoStore({
-    uri: process.env.MONGO_URI as string,
-    collection: 'sessions',
-  });
-
-  store.on('error', (error: Error) => {
-    console.error('(Server) Session store error:', error);
-  });
-} else {
-  console.warn('(Server) MONGO_URI not found, using memory store for sessions');
-}
-
 // CORS config based on environment
 const allowedOrigins = ['http://localhost:5173'];
 
-// Add production URLs only if they exist, and strip trailing slashes
 if (process.env.CUSTOM_URL) {
   allowedOrigins.push(process.env.CUSTOM_URL.replace(/\/$/, ''));
 }
@@ -66,21 +46,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET as string,
-    store: store || undefined,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none',
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
-    proxy: true,
-  })
-);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
