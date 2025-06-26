@@ -23,6 +23,9 @@
   "author": "Jawuan Lewis",
   "license": "MIT",
   "dependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -32,10 +35,7 @@
     "openai": "^4.84.0"
   },
   "devDependencies": {
-    "@types/compression": "^1.8.1",
-    "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.3",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^20.11.24",
     "concurrently": "^9.1.2",
