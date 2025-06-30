@@ -13,6 +13,7 @@
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
     "dev": "concurrently --raw \"npm run dev:server\" \"npm run dev:client\"",
+    "heroku-postbuild": "cd server && npm install && npm run build",
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
