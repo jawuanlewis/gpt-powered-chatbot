@@ -1,7 +1,7 @@
 {
-  "name": "chatbot",
+  "name": "root",
   "version": "1.0.0",
-  "description": "Personal chatbot powered by OpenAI",
+  "description": "My GPT-powered full-stack chatbot",
   "engines": {
     "node": "20.x"
   },
@@ -12,8 +12,7 @@
     "start": "cd server && npm run start",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "heroku-postbuild": "cd server && npm install && npm run build",
+    "dev": "concurrently --raw \"npm run dev:server\" \"npm run dev:client\"",
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
@@ -22,9 +21,7 @@
   "type": "module",
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "prettier": "^3.5.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "prettier": "^3.5.0"
   },
   "prettier": {
     "semi": true,

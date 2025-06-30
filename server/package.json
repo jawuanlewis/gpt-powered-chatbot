@@ -1,20 +1,16 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Project Backend & APIs",
+  "description": "Project backend & APIs",
+  "type": "module",
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "concurrently \"tsc --watch\" \"nodemon dist/app.js\""
+    "dev": "concurrently \"tsc --watch\" \"nodemon dist/app.js\"",
+    "heroku-postbuild": "npm run build"
   },
-  "author": "Jawuan Lewis",
-  "license": "ISC",
-  "type": "module",
   "dependencies": {
-    "@types/compression": "^1.8.1",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
@@ -24,10 +20,14 @@
     "openai": "^5.7.0"
   },
   "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^24.0.4",
     "concurrently": "^9.2.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "typescript": "^5.8.3"
   }
 }

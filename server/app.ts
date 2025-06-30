@@ -4,17 +4,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB, closeDB } from './config/db.js';
 import chatRoutes from './routes/chatRoutes.js';
-import { fileURLToPath } from 'url';
-import path, { dirname } from 'path';
 
 dotenv.config();
 
 const app: Express = express();
 
 app.set('trust proxy', 1);
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // CORS config based on environment
 const allowedOrigins = [
