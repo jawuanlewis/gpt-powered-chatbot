@@ -3,17 +3,17 @@ import api from './apiClient';
 
 export const chatService = {
   getChatHistory: async () => {
-    const response = await api.get('/chat/history');
+    const response = await api.get('/api/chat/history');
     return response.data?.chatHistory ?? [];
   },
 
   handlePrompt: async (chat: CurrChat, prompt: string) => {
-    const response = await api.post('/chat/prompt', { chat, prompt });
+    const response = await api.post('/api/chat/prompt', { chat, prompt });
     return response.data?.chat ?? chat;
   },
 
   updateChatTitle: async (chatId: string, newTitle: string) => {
-    const response = await api.patch('/chat/title', {
+    const response = await api.patch('/api/chat/title', {
       chatId: chatId,
       title: newTitle,
     });
