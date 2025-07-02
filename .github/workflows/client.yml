@@ -1,0 +1,45 @@
+name: Client CI
+
+on:
+  push:
+    paths:
+      - 'client/**'
+      - '.github/workflows/client.yml'
+    branches: [main]
+  pull_request:
+    paths:
+      - 'client/**'
+      - '.github/workflows/client.yml'
+    branches: [main]
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build client
+        run: npm run build
+
+      - name: Preview build (smoke test)
+        run: |
+          npm install -g serve
+          nohup serve -s dist -l 5000 &
+          sleep 5
+          curl --fail http://localhost:5000/ || (echo "Frontend did not respond" && exit 1)
+          pkill -f "serve -s dist -l 5000" || true

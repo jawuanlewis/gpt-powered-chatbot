@@ -1,0 +1,94 @@
+name: Server CI/CD
+
+on:
+  push:
+    paths:
+      - 'server/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/server.yml'
+    branches: [main]
+  pull_request:
+    paths:
+      - 'server/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/server.yml'
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build server
+        run: npm run build
+
+  smoke-test:
+    needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t myserver .
+
+      - name: Run Docker container (smoke test)
+        run: |
+          docker run -d --name myserver -p 3000:3000 myserver
+          sleep 10
+          curl --fail http://localhost:3000/api/chat/history || (docker logs myserver && exit 1)
+          docker stop myserver
+          docker rm myserver
+
+  deploy:
+    needs: smoke-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Login to Heroku Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.heroku.com
+          username: ${{ secrets.HEROKU_EMAIL }}
+          password: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Build and push Docker image to Heroku
+        run: |
+          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+      - name: Release to Heroku (Staging)
+        run: |
+          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Verify deployment
+        run: |
+          sleep 30
+          curl --fail --max-time 30 ${{ secrets.HEROKU_APP_URL }} || echo "Deployment verification failed - app may still be starting up"

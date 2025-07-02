@@ -66,7 +66,7 @@ const ChatArea = ({
         {!isSidebarOpen && (
           <MenuButton onClick={() => setIsSidebarOpen(true)} />
         )}
-        <label className="main-title">Jawuan's GPT</label>
+        <label className="main-title">Jawuan&apos;s GPT</label>
       </div>
 
       {currentChat ? (
