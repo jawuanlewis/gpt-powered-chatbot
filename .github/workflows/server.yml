@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t myserver .
+        run: docker build -f Dockerfile -t myserver .
 
       - name: Run Docker container (smoke test)
         run: |
@@ -79,7 +79,7 @@ jobs:
 
       - name: Build and push Docker image to Heroku
         run: |
-          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
+          docker build -f Dockerfile -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
           docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
 
       - name: Release to Heroku (Staging)
