@@ -40,6 +40,10 @@ jobs:
   smoke-test:
     needs: build
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:6
+        ports: [27017:27017]
     steps:
       - uses: actions/checkout@v4
 
@@ -49,15 +53,27 @@ jobs:
       - name: Run Docker container (smoke test)
         run: |
           docker run -d --name myserver -p 3000:3000 \
+            -e MONGO_URI="mongodb://host.docker.internal:27017/test" \
             -e OPENAI_API_KEY="dummy-openai-key-for-testing" \
-            -e MONGO_URI="mongodb://dummy:27017/test" \
             -e CUSTOM_URL="https://dummy.example.com" \
-            -e VERCEL_URL="https://dummy.vercel.app" \
+            -e VERCEL_URL="https://dummy-vercel.example.com" \
             myserver
-          sleep 10
-          curl --fail http://localhost:3000/api/chat/history || (docker logs myserver && exit 1)
-          docker stop myserver
-          docker rm myserver
+
+      - name: Wait for app to start
+        run: sleep 15
+
+      - name: Health check
+        run: |
+          # Check if app responds to chat history endpoint
+          curl --fail --max-time 10 http://localhost:3000/api/chat/history || (echo "App not responding to chat history endpoint" && docker logs myserver && exit 1)
+
+      - name: Show app logs on failure
+        if: failure()
+        run: docker logs myserver
+
+      - name: Cleanup
+        if: always()
+        run: docker stop myserver || true && docker rm myserver || true
 
   deploy:
     needs: smoke-test
