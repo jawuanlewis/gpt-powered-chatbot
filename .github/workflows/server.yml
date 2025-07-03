@@ -52,7 +52,7 @@ jobs:
 
       - name: Run Docker container (smoke test)
         run: |
-          docker run -d --name myserver -p 3000:3000 \
+          docker run -d --name myserver --network github_network -p 3000:3000 \
             -e MONGO_URI="mongodb://mongo:27017/test" \
             -e OPENAI_API_KEY="dummy-openai-key-for-testing" \
             -e CUSTOM_URL="https://dummy.example.com" \
@@ -60,11 +60,10 @@ jobs:
             myserver
 
       - name: Wait for app to start
-        run: sleep 15
+        run: sleep 5
 
       - name: Health check
         run: |
-          # Check if app responds to chat history endpoint
           curl --fail --max-time 10 http://localhost:3000/api/chat/history || (echo "App not responding to chat history endpoint" && docker logs myserver && exit 1)
 
       - name: Show app logs on failure
