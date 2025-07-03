@@ -15,7 +15,8 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
   'http://localhost:5173',
   process.env.CUSTOM_URL,
-  process.env.VERCEL_URL,
+  process.env.PREVIEW_URL,
+  process.env.PROD_URL,
 ].filter(Boolean) as string[];
 
 /************************

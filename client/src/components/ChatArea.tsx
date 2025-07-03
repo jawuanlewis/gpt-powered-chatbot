@@ -72,7 +72,7 @@ const ChatArea = ({
       {currentChat ? (
         <Conversation chat={currentChat.messages} />
       ) : (
-        <label className="greeting">Good {timeOfDay}, User</label>
+        <label className="greeting">Good {timeOfDay}!</label>
       )}
       <div className="input-container">
         <input

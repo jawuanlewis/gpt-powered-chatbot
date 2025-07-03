@@ -56,7 +56,8 @@ jobs:
             -e MONGO_URI="mongodb://localhost:27017/test" \
             -e OPENAI_API_KEY="dummy-openai-key-for-testing" \
             -e CUSTOM_URL="https://dummy.example.com" \
-            -e VERCEL_URL="https://dummy-vercel.example.com" \
+            -e PREVIEW_URL="https://dummy-preview.example.com" \
+            -e PROD_URL="https://dummy-prod.example.com" \
             myserver
 
       - name: Wait for app to start
