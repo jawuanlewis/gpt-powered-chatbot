@@ -92,18 +92,39 @@ jobs:
           username: ${{ secrets.HEROKU_EMAIL }}
           password: ${{ secrets.HEROKU_API_KEY }}
 
-      - name: Build and push Docker image to Heroku
+      # Staging
+      - name: Build and push Docker image to staging
         run: |
-          docker build -f Dockerfile -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
-          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+          docker build -f Dockerfile -t registry.heroku.com/${{ secrets.HEROKU_STAGING_APP }}/web .
+          docker push registry.heroku.com/${{ secrets.HEROKU_STAGING_APP }}/web
 
-      - name: Release to Heroku (Staging)
+      - name: Release to staging
         run: |
-          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
+          heroku container:release web --app ${{ secrets.HEROKU_STAGING_APP }}
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
-      - name: Verify deployment
+      - name: Verify staging deployment
         run: |
           sleep 30
-          curl --fail --max-time 30 ${{ secrets.HEROKU_APP_URL }} || echo "Deployment verification failed - app may still be starting up"
+          curl --fail --max-time 30 ${{ secrets.HEROKU_STAGING_URL }} || echo "Staging deployment verification failed - app may still be starting up"
+
+      # Production
+      - name: Build and push Docker image to production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker build -f Dockerfile -t registry.heroku.com/${{ secrets.HEROKU_PROD_APP }}/web .
+          docker push registry.heroku.com/${{ secrets.HEROKU_PROD_APP }}/web
+
+      - name: Release to production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          heroku container:release web --app ${{ secrets.HEROKU_PROD_APP }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Verify production deployment
+        if: github.ref == 'refs/heads/main'
+        run: |
+          sleep 30
+          curl --fail --max-time 30 ${{ secrets.HEROKU_PROD_URL }} || echo "Production deployment verification failed - app may still be starting up"
