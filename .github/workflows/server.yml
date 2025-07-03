@@ -53,7 +53,7 @@ jobs:
       - name: Run Docker container (smoke test)
         run: |
           docker run -d --name myserver -p 3000:3000 \
-            -e MONGO_URI="mongodb://host.docker.internal:27017/test" \
+            -e MONGO_URI="mongodb://mongo:27017/test" \
             -e OPENAI_API_KEY="dummy-openai-key-for-testing" \
             -e CUSTOM_URL="https://dummy.example.com" \
             -e VERCEL_URL="https://dummy-vercel.example.com" \
