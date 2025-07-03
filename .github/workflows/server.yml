@@ -48,7 +48,12 @@ jobs:
 
       - name: Run Docker container (smoke test)
         run: |
-          docker run -d --name myserver -p 3000:3000 myserver
+          docker run -d --name myserver -p 3000:3000 \
+            -e OPENAI_API_KEY="dummy-openai-key-for-testing" \
+            -e MONGO_URI="mongodb://dummy:27017/test" \
+            -e CUSTOM_URL="https://dummy.example.com" \
+            -e VERCEL_URL="https://dummy.vercel.app" \
+            myserver
           sleep 10
           curl --fail http://localhost:3000/api/chat/history || (docker logs myserver && exit 1)
           docker stop myserver
