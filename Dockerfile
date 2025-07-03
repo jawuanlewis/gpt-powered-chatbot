@@ -2,25 +2,23 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install dependencies
-COPY package.json ./
-COPY client/package.json ./client/
-RUN npm install && npm install --prefix client
+COPY package.json package-lock.json tsconfig.base.json ./
 
-# Copy source code
-COPY . .
+COPY server/package.json server/package-lock.json ./server/
+WORKDIR /app/server
+RUN npm ci
 
+COPY server/. ./
 RUN npm run build
 
-# Stage 2: Production image
+# Stage 2: Production
 FROM node:20-alpine AS production
-WORKDIR /app
+WORKDIR /app/server
 
-# Copy only the built output and production dependencies
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/client/dist ./client/dist
-RUN npm install --omit=dev
+COPY --from=builder /app/server/package.json ./
+COPY --from=builder /app/server/package-lock.json ./
+COPY --from=builder /app/server/dist ./dist
+RUN npm ci --omit=dev
 
 EXPOSE 3000
 

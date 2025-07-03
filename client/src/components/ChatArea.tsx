@@ -66,13 +66,13 @@ const ChatArea = ({
         {!isSidebarOpen && (
           <MenuButton onClick={() => setIsSidebarOpen(true)} />
         )}
-        <label className="main-title">Jawuan's GPT</label>
+        <label className="main-title">Jawuan&apos;s GPT</label>
       </div>
 
       {currentChat ? (
         <Conversation chat={currentChat.messages} />
       ) : (
-        <label className="greeting">Good {timeOfDay}, User</label>
+        <label className="greeting">Good {timeOfDay}!</label>
       )}
       <div className="input-container">
         <input

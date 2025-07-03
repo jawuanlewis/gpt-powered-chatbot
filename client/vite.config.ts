@@ -1,33 +1,27 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, __dirname);
+
+  return {
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
     },
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-        // configure: (proxy, _options) => {
-        //   proxy.on('error', (err, _req, _res) => {
-        //     console.log('proxy error', err);
-        //   });
-        //   proxy.on('proxyReq', (proxyReq, req, _res) => {
-        //     console.log('Sending Request:', req.method, req.url);
-        //   });
-        //   proxy.on('proxyRes', (proxyRes, req, _res) => {
-        //     console.log('Received Response:', proxyRes.statusCode, req.url);
-        //   });
-        // },
+    server: {
+      proxy: {
+        '/api': {
+          target: env.VITE_API_URL,
+          changeOrigin: true,
+        },
       },
     },
     headers: {
@@ -36,10 +30,13 @@ export default defineConfig({
         script-src 'self' 'unsafe-inline' 'unsafe-eval';
         style-src 'self' 'unsafe-inline';
         img-src 'self' data:;
-        connect-src 'self' http://localhost:3000;
+        connect-src 'self' ${env.VITE_API_URL};
       `
         .replace(/\s+/g, ' ')
         .trim(),
     },
-  },
+    define: {
+      'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
+    },
+  };
 });

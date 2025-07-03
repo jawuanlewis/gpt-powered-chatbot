@@ -1,48 +1,28 @@
 {
-  "name": "chatbot",
+  "name": "root",
   "version": "1.0.0",
-  "description": "Personal chatbot powered by OpenAI",
-  "type": "module",
-  "main": "dist/app.js",
+  "description": "My GPT-powered full-stack chatbot",
   "engines": {
     "node": "20.x"
   },
   "scripts": {
-    "start": "node dist/app.js",
-    "dev:server": "concurrently \"tsc --watch\" \"nodemon dist/app.js\"",
-    "dev:client": "cd client && npm run dev",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "build:server": "tsc",
+    "build:server": "cd server && npm run build",
     "build:client": "cd client && npm run build",
     "build": "npm run build:server && npm run build:client",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "npm install --prefix client && npm run build",
+    "start": "cd server && npm run start",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev": "concurrently --raw \"npm run dev:server\" \"npm run dev:client\"",
+    "heroku-postbuild": "cd server && npm install && npm run build",
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
   "author": "Jawuan Lewis",
   "license": "MIT",
-  "dependencies": {
-    "@types/compression": "^1.8.1",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "compression": "^1.8.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^5.1.0",
-    "mongoose": "^8.15.0",
-    "nanoid": "^5.1.5",
-    "openai": "^4.84.0"
-  },
+  "type": "module",
   "devDependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/mongoose": "^5.11.96",
-    "@types/node": "^20.11.24",
     "concurrently": "^9.1.2",
-    "nodemon": "^3.1.0",
-    "prettier": "^3.5.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "prettier": "^3.5.0"
   },
   "prettier": {
     "semi": true,
