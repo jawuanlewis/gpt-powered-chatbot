@@ -52,15 +52,15 @@ jobs:
 
       - name: Run Docker container (smoke test)
         run: |
-          docker run -d --name myserver --network github_network -p 3000:3000 \
-            -e MONGO_URI="mongodb://mongo:27017/test" \
+          docker run -d --name myserver --network host \
+            -e MONGO_URI="mongodb://localhost:27017/test" \
             -e OPENAI_API_KEY="dummy-openai-key-for-testing" \
             -e CUSTOM_URL="https://dummy.example.com" \
             -e VERCEL_URL="https://dummy-vercel.example.com" \
             myserver
 
       - name: Wait for app to start
-        run: sleep 5
+        run: sleep 10
 
       - name: Health check
         run: |
