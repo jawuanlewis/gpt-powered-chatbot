@@ -1,3 +1,4 @@
+/* Sidebar chat list item */
 .chat-item {
   padding: 0.75rem;
   cursor: pointer;
@@ -6,6 +7,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .chat-item {
+    padding: 1rem 0.75rem;
+  }
 }
 
 .chat-item:hover {
@@ -30,6 +37,13 @@
   padding: 0.2rem;
   font-size: 1.2rem;
   transition: opacity 0.2s;
+}
+
+@media (max-width: 768px) {
+  .edit-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
 
 .chat-item:hover .edit-btn {
