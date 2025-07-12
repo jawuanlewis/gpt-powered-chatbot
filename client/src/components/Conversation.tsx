@@ -11,7 +11,15 @@ const Conversation = ({ chat }: ConversationProps) => {
       <ul>
         {chat.map((message) => (
           <li key={message.id} className={`${message.role}-message`}>
-            {message.content}
+            {message.id === 'loading' ? (
+              <span className="loading-dots">
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+              </span>
+            ) : (
+              message.content
+            )}
           </li>
         ))}
       </ul>

@@ -4,6 +4,7 @@ import { CurrChat } from '@/types/chat';
 import MenuButton from './MenuButton';
 import Conversation from './Conversation';
 import '@/styles/ChatArea.css';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ChatAreaProps {
   currentChat: CurrChat;
@@ -20,6 +21,7 @@ const ChatArea = ({
 }: ChatAreaProps) => {
   const [timeOfDay, setTimeOfDay] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>(''); // Stores user's current prompt input
+  const [isLoading, setIsLoading] = useState(false); // Message-loading state
 
   useEffect(() => {
     const updateGreeting = () => {
@@ -43,11 +45,27 @@ const ChatArea = ({
   const updateChat = async () => {
     if (!inputValue.trim()) return;
 
+    setIsLoading(true);
     try {
       if (!currentChat) {
+        const tempId = uuidv4();
+        setCurrentChat({
+          id: tempId,
+          userId: '',
+          title: '',
+          messages: [
+            { id: uuidv4(), role: 'user' as const, content: inputValue },
+            { id: 'loading', role: 'assistant' as const, content: '...' },
+          ],
+        });
         const newChat = await chatService.handlePrompt(null, inputValue);
         setCurrentChat(newChat);
       } else {
+        const tempMessages = [
+          ...currentChat.messages,
+          { id: 'loading', role: 'assistant' as const, content: '...' },
+        ];
+        setCurrentChat({ ...currentChat, messages: tempMessages });
         const updatedChat = await chatService.handlePrompt(
           currentChat,
           inputValue
@@ -57,6 +75,8 @@ const ChatArea = ({
       setInputValue('');
     } catch (error) {
       console.error('(Client) Error calling handlePrompt() API:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,11 +102,13 @@ const ChatArea = ({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && updateChat()}
+          disabled={isLoading}
         />
         <button
           className="send-button"
           onClick={() => updateChat()}
           aria-label="Send message"
+          disabled={isLoading}
         >
           ➤
         </button>
