@@ -24,10 +24,40 @@ const SideBar = ({
       <MenuButton onClick={() => setIsSidebarOpen(false)} />
 
       <button className="new-chat-btn" onClick={() => setCurrentChat(null)}>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '0.1rem'}}>
-          <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
-          <line x1="10" y1="6" x2="10" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="6" y1="10" x2="14" y2="10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ marginRight: '0.1rem' }}
+        >
+          <circle
+            cx="10"
+            cy="10"
+            r="9"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+          />
+          <line
+            x1="10"
+            y1="6"
+            x2="10"
+            y2="14"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="6"
+            y1="10"
+            x2="14"
+            y2="10"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
         </svg>
         New Chat
       </button>

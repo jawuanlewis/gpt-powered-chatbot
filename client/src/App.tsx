@@ -11,7 +11,10 @@ const App = () => {
     const savedChat = sessionStorage.getItem('ACTIVE_CHAT');
     return savedChat ? JSON.parse(savedChat) : null;
   });
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(
+    window.innerWidth > 768
+  );
 
   useEffect(() => {
     const initializeChats = async () => {
@@ -24,6 +27,14 @@ const App = () => {
   useEffect(() => {
     sessionStorage.setItem('ACTIVE_CHAT', JSON.stringify(activeChat));
   }, [activeChat]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const getChats = async () => {
     try {
@@ -50,16 +61,18 @@ const App = () => {
   };
 
   return (
-    <div className="app">
-      <div className={`sidebar ${!isSidebarOpen ? 'hidden' : ''}`}>
-        <SideBar
-          chats={chats}
-          setIsSidebarOpen={setIsSidebarOpen}
-          currentChat={activeChat}
-          setCurrentChat={setActiveChat}
-          onUpdateChatTitle={handleUpdateChatTitle}
-        />
-      </div>
+    <div className={`app${isMobile && isSidebarOpen ? ' sidebar-open' : ''}`}>
+      {(!isMobile || isSidebarOpen) && (
+        <div className={`sidebar${!isSidebarOpen ? ' hidden' : ''}`}>
+          <SideBar
+            chats={chats}
+            setIsSidebarOpen={setIsSidebarOpen}
+            currentChat={activeChat}
+            setCurrentChat={setActiveChat}
+            onUpdateChatTitle={handleUpdateChatTitle}
+          />
+        </div>
+      )}
       <div className="chat-area">
         <ChatArea
           currentChat={activeChat}
