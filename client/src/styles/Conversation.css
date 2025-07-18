@@ -76,7 +76,7 @@
 }
 
 .user-message {
-  background-color: var(--purple-accent);
+  background-color: var(--item-background);
   margin-left: auto !important;
   margin-right: 1rem !important;
   color: var(--light-text);
