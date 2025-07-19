@@ -7,7 +7,7 @@ interface MenuButtonProps {
 const MenuButton = ({ onClick }: MenuButtonProps) => {
   return (
     <a className="menu-btn" onClick={onClick}>
-      <img src={hamburgerMenu} />
+      <img src={hamburgerMenu} title="Toggle sidebar" />
     </a>
   );
 };
