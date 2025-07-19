@@ -1,6 +1,10 @@
 .chat-title {
   flex: 1;
   margin-right: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
 }
 
 .edit-btn {

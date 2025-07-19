@@ -106,6 +106,7 @@ const ChatArea = ({
         />
         <button
           className="send-button"
+          title="Send message"
           onClick={() => updateChat()}
           aria-label="Send message"
           disabled={isLoading}
