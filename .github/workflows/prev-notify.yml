@@ -14,7 +14,7 @@ jobs:
       - name: Extract deployment info
         id: deployment-info
         run: |
-          echo "deployment_url=${{ github.event.deployment_status.target_url }}" >> $GITHUB_OUTPUT
+          echo "deployment_url=${{ secrets.VERCEL_PREVIEW_URL }}" >> $GITHUB_OUTPUT
           echo "commit_sha=$(echo '${{ github.event.deployment.sha }}' | cut -c1-7)" >> $GITHUB_OUTPUT
           echo "commit_full_sha=${{ github.event.deployment.sha }}" >> $GITHUB_OUTPUT
           echo "environment=${{ github.event.deployment_status.environment }}" >> $GITHUB_OUTPUT
@@ -28,53 +28,56 @@ jobs:
 
       - name: Notify Slack on successful deployment
         run: |
+          # Build the message text in a variable for better readability
+          MESSAGE_TEXT="*Repository:* ${{ github.repository }}"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Environment:* ${{ steps.deployment-info.outputs.environment }}"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Author:* ${{ steps.deployment-info.outputs.author }}"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Commit:* \`${{ steps.deployment-info.outputs.commit_sha }}\`"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Message:* ${{ steps.deployment-info.outputs.commit_message }}"
+
           curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}' \
             -H 'Content-type: application/json' \
-            --data '{
-              "channel": "#prev-deployments",
-              "blocks": [
+            --data "{
+              \"channel\": \"#prev-deployments\",
+              \"blocks\": [
                 {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "🚀 Frontend Deployment Successful"
+                  \"type\": \"header\",
+                  \"text\": {
+                    \"type\": \"plain_text\",
+                    \"text\": \"🚀 Frontend Deployment Successful\"
                   }
                 },
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Repository:* ${{ github.repository }}\n" +
-                      "*Environment:* ${{ steps.deployment-info.outputs.environment }}\n" +
-                      "*Author:* ${{ steps.deployment-info.outputs.author }}\n" +
-                      "*Commit:* `${{ steps.deployment-info.outputs.commit_sha }}`\n" +
-                      "*Message:* ${{ steps.deployment-info.outputs.commit_message }}"
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \"${MESSAGE_TEXT}\"
                   }
                 },
                 {
-                  "type": "actions",
-                  "elements": [
+                  \"type\": \"actions\",
+                  \"elements\": [
                     {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Deployment"
+                      \"type\": \"button\",
+                      \"text\": {
+                        \"type\": \"plain_text\",
+                        \"text\": \"View Deployment\"
                       },
-                      "url": "${{ steps.deployment-info.outputs.deployment_url }}",
-                      "style": "primary"
+                      \"url\": \"${{ secrets.VERCEL_PREVIEW_URL }}\",
+                      \"style\": \"primary\"
                     },
                     {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Commit"
+                      \"type\": \"button\",
+                      \"text\": {
+                        \"type\": \"plain_text\",
+                        \"text\": \"View Commit\"
                       },
-                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_full_sha }}"
+                      \"url\": \"https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_full_sha }}\"
                     }
                   ]
                 }
               ]
-            }' \
+            }" \
             https://slack.com/api/chat.postMessage
 
   notify-slack-failure:
@@ -94,50 +97,53 @@ jobs:
 
       - name: Notify Slack on failed deployment
         run: |
+          # Build the message text in a variable for better readability
+          MESSAGE_TEXT="*Repository:* ${{ github.repository }}"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Environment:* ${{ steps.deployment-info.outputs.environment }}"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Author:* ${{ steps.deployment-info.outputs.author }}"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Commit:* \`${{ steps.deployment-info.outputs.commit_sha }}\`"
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n\n❗ *Check your Vercel dashboard for error details.*"
+
           curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}' \
             -H 'Content-type: application/json' \
-            --data '{
-              "channel": "#prev-deployments",
-              "blocks": [
+            --data "{
+              \"channel\": \"#prev-deployments\",
+              \"blocks\": [
                 {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "⚠️ Frontend Deployment Failed"
+                  \"type\": \"header\",
+                  \"text\": {
+                    \"type\": \"plain_text\",
+                    \"text\": \"⚠️ Frontend Deployment Failed\"
                   }
                 },
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Repository:* ${{ github.repository }}\n" +
-                      "*Environment:* ${{ steps.deployment-info.outputs.environment }}\n" +
-                      "*Author:* ${{ steps.deployment-info.outputs.author }}\n" +
-                      "*Commit:* `${{ steps.deployment-info.outputs.commit_sha }}`\n\n" +
-                      "❗ *Check your Vercel dashboard for error details.*"
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \"${MESSAGE_TEXT}\"
                   }
                 },
                 {
-                  "type": "actions",
-                  "elements": [
+                  \"type\": \"actions\",
+                  \"elements\": [
                     {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Commit"
+                      \"type\": \"button\",
+                      \"text\": {
+                        \"type\": \"plain_text\",
+                        \"text\": \"View Commit\"
                       },
-                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_full_sha }}"
+                      \"url\": \"https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_full_sha }}\"
                     },
                     {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "Vercel Dashboard"
+                      \"type\": \"button\",
+                      \"text\": {
+                        \"type\": \"plain_text\",
+                        \"text\": \"Vercel Dashboard\"
                       },
-                      "url": "https://vercel.com/dashboard"
+                      \"url\": \"https://vercel.com/dashboard\"
                     }
                   ]
                 }
               ]
-            }' \
+            }" \
             https://slack.com/api/chat.postMessage
