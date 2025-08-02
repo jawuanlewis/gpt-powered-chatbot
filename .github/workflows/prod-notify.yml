@@ -1,0 +1,168 @@
+name: Production Deployment Notification
+
+on:
+  deployment_status:
+
+jobs:
+  notify-slack:
+    # Only run for successful production deployments
+    if: |
+      github.event.deployment_status.state == 'success' && 
+      github.event.deployment_status.environment == 'Production'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract deployment info
+        id: deployment-info
+        run: |
+          echo "deployment_url=${{ github.event.deployment_status.target_url }}" >> $GITHUB_OUTPUT
+          echo "commit_sha=${{ github.event.deployment.sha }}" >> $GITHUB_OUTPUT
+          echo "commit_message=$(echo '${{ github.event.deployment.payload.commit_message }}' | head -c 100)" >> $GITHUB_OUTPUT
+          echo "author=${{ github.event.deployment.creator.login }}" >> $GITHUB_OUTPUT
+
+      - name: Notify Slack on successful deployment
+        run: |
+          curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}' \
+            -H 'Content-type: application/json' \
+            --data '{
+              "channel": "#prod-deployments",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚀 Frontend Deployment Successful"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\nProduction"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Deployed by:*\n${{ steps.deployment-info.outputs.author }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n`${{ steps.deployment-info.outputs.commit_sha }}`"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Message:* ${{ steps.deployment-info.outputs.commit_message }}"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Deployment"
+                      },
+                      "url": "${{ steps.deployment-info.outputs.deployment_url }}",
+                      "style": "primary"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Commit"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_sha }}"
+                    }
+                  ]
+                }
+              ]
+            }' \
+            https://slack.com/api/chat.postMessage
+
+  notify-slack-failure:
+    # Handle failed deployments
+    if: |
+      github.event.deployment_status.state == 'failure' && 
+      github.event.deployment_status.environment == 'Production'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract deployment info
+        id: deployment-info
+        run: |
+          echo "commit_sha=${{ github.event.deployment.sha }}" >> $GITHUB_OUTPUT
+          echo "author=${{ github.event.deployment.creator.login }}" >> $GITHUB_OUTPUT
+
+      - name: Notify Slack on failed deployment
+        run: |
+          curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}' \
+            -H 'Content-type: application/json' \
+            --data '{
+              "channel": "#prod-deployments",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "⚠️ Frontend Deployment Failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\nProduction"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Deployed by:*\n${{ steps.deployment-info.outputs.author }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n`${{ steps.deployment-info.outputs.commit_sha }}`"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "❗ Check your Vercel dashboard for error details."
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Commit"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_sha }}"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Vercel Dashboard"
+                      },
+                      "url": "https://vercel.com/dashboard"
+                    }
+                  ]
+                }
+              ]
+            }' \
+            https://slack.com/api/chat.postMessage
