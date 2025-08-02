@@ -15,9 +15,16 @@ jobs:
         id: deployment-info
         run: |
           echo "deployment_url=${{ github.event.deployment_status.target_url }}" >> $GITHUB_OUTPUT
-          echo "commit_sha=${{ github.event.deployment.sha }}" >> $GITHUB_OUTPUT
-          echo "commit_message=$(echo '${{ github.event.deployment.payload.commit_message }}' | head -c 100)" >> $GITHUB_OUTPUT
+          echo "commit_sha=$(echo '${{ github.event.deployment.sha }}' | cut -c1-7)" >> $GITHUB_OUTPUT
+          echo "commit_full_sha=${{ github.event.deployment.sha }}" >> $GITHUB_OUTPUT
+          echo "environment=${{ github.event.deployment_status.environment }}" >> $GITHUB_OUTPUT
           echo "author=${{ github.event.deployment.creator.login }}" >> $GITHUB_OUTPUT
+
+          # Get commit message from GitHub API since deployment event doesn't always include it
+          COMMIT_MESSAGE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.deployment.sha }}" | \
+            jq -r '.commit.message' | head -c 100)
+          echo "commit_message=${COMMIT_MESSAGE}" >> $GITHUB_OUTPUT
 
       - name: Notify Slack on successful deployment
         run: |
@@ -35,30 +42,13 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Repository:*\n${{ github.repository }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Environment:*\nProduction"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Deployed by:*\n${{ steps.deployment-info.outputs.author }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:*\n`${{ steps.deployment-info.outputs.commit_sha }}`"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Message:* ${{ steps.deployment-info.outputs.commit_message }}"
+                    "text": "*Repository:* ${{ github.repository }}\n" +
+                      "*Environment:* ${{ steps.deployment-info.outputs.environment }}\n" +
+                      "*Author:* ${{ steps.deployment-info.outputs.author }}\n" +
+                      "*Commit:* `${{ steps.deployment-info.outputs.commit_sha }}`\n" +
+                      "*Message:* ${{ steps.deployment-info.outputs.commit_message }}"
                   }
                 },
                 {
@@ -79,7 +69,7 @@ jobs:
                         "type": "plain_text",
                         "text": "View Commit"
                       },
-                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_sha }}"
+                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_full_sha }}"
                     }
                   ]
                 }
@@ -97,7 +87,9 @@ jobs:
       - name: Extract deployment info
         id: deployment-info
         run: |
-          echo "commit_sha=${{ github.event.deployment.sha }}" >> $GITHUB_OUTPUT
+          echo "commit_sha=$(echo '${{ github.event.deployment.sha }}' | cut -c1-7)" >> $GITHUB_OUTPUT
+          echo "commit_full_sha=${{ github.event.deployment.sha }}" >> $GITHUB_OUTPUT
+          echo "environment=${{ github.event.deployment_status.environment }}" >> $GITHUB_OUTPUT
           echo "author=${{ github.event.deployment.creator.login }}" >> $GITHUB_OUTPUT
 
       - name: Notify Slack on failed deployment
@@ -116,30 +108,13 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Repository:*\n${{ github.repository }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Environment:*\nProduction"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Deployed by:*\n${{ steps.deployment-info.outputs.author }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:*\n`${{ steps.deployment-info.outputs.commit_sha }}`"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "❗ Check your Vercel dashboard for error details."
+                    "text": "*Repository:* ${{ github.repository }}\n" +
+                      "*Environment:* ${{ steps.deployment-info.outputs.environment }}\n" +
+                      "*Author:* ${{ steps.deployment-info.outputs.author }}\n" +
+                      "*Commit:* `${{ steps.deployment-info.outputs.commit_sha }}`\n\n" +
+                      "❗ *Check your Vercel dashboard for error details.*"
                   }
                 },
                 {
@@ -151,7 +126,7 @@ jobs:
                         "type": "plain_text",
                         "text": "View Commit"
                       },
-                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_sha }}"
+                      "url": "https://github.com/${{ github.repository }}/commit/${{ steps.deployment-info.outputs.commit_full_sha }}"
                     },
                     {
                       "type": "button",
