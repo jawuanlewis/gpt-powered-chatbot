@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build server
+      - name: Build
         run: npm run build
 
   smoke-test:
@@ -50,7 +50,7 @@ jobs:
       - name: Build Docker image
         run: docker build -f Dockerfile -t myserver .
 
-      - name: Run Docker container (smoke test)
+      - name: Run Docker container
         run: |
           docker run -d --name myserver --network host \
             -e MONGO_URI="mongodb://localhost:27017/test" \

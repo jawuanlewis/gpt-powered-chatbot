@@ -14,7 +14,7 @@
 
 ## 🧠 Project Overview
 
-A custom-built AI assistant powered by OpenAI models, featuring persistent chat history, sleek UI, and full-stack MERN architecture.
+A custom-built AI assistant powered by OpenAI models, featuring session-persistent chat history, sleek UI, and full-stack MERN architecture.
 
 ## 🚀 Live Demo
 
@@ -33,7 +33,6 @@ A custom-built AI assistant powered by OpenAI models, featuring persistent chat 
 **Chat Management**
 
 - Create and manage multiple chat sessions
-- Persistent chat history
 - Rename and organize conversations
 - Sidebar navigation between chats
 
@@ -55,7 +54,7 @@ A custom-built AI assistant powered by OpenAI models, featuring persistent chat 
 - **Frontend:** React (Vite), TypeScript, CSS
 - **Backend:** Node.js, Express.js, OpenAI API
 - **Database:** MongoDB (with Mongoose)
-- **Testing/Deployment:** Docker, GitHub Actions, Heroku
+- **Testing/Deployment:** Docker, GitHub Actions, Vercel, Heroku
 
 ## 📁 Project Structure
 

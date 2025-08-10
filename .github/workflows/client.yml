@@ -1,4 +1,4 @@
-name: Client CI
+name: Client CI/CD
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build client
+      - name: Build
         run: npm run build
 
       - name: Preview build (smoke test)
